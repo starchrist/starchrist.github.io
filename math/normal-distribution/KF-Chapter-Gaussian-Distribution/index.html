@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"starchrist.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.11.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="这篇文章已经被加密，请输入密码后查看。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="高斯（正态）分布">
+<meta property="og:url" content="https://starchrist.github.io/math/normal-distribution/KF-Chapter-Gaussian-Distribution/index.html">
+<meta property="og:site_name" content="Yun&#39;s Tech Blog">
+<meta property="og:description" content="这篇文章已经被加密，请输入密码后查看。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-07-30T14:17:52.000Z">
+<meta property="article:modified_time" content="2022-05-12T12:53:17.201Z">
+<meta property="article:author" content="Yun MU">
+<meta property="article:tag" content="math">
+<meta property="article:tag" content="kalman filter">
+<meta property="article:tag" content="normal distribution">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://starchrist.github.io/math/normal-distribution/KF-Chapter-Gaussian-Distribution/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://starchrist.github.io/math/normal-distribution/KF-Chapter-Gaussian-Distribution/","path":"math/normal-distribution/KF-Chapter-Gaussian-Distribution/","title":"高斯（正态）分布"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>高斯（正态）分布 | Yun's Tech Blog</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Yun's Tech Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Yun's Tech Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Yun MU"
+      src="/images/avatar.jfif">
+  <p class="site-author-name" itemprop="name">Yun MU</p>
+  <div class="site-description" itemprop="description">Never Give Up!</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/starchrist" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;starchrist" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:starchrist7@gmail.com" title="E-Mail → mailto:starchrist7@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://starchrist.github.io/math/normal-distribution/KF-Chapter-Gaussian-Distribution/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jfif">
+      <meta itemprop="name" content="Yun MU">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yun's Tech Blog">
+      <meta itemprop="description" content="Never Give Up!">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="高斯（正态）分布 | Yun's Tech Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          高斯（正态）分布
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-07-30 22:17:52" itemprop="dateCreated datePublished" datetime="2021-07-30T22:17:52+08:00">2021-07-30</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-05-12 20:53:17" itemprop="dateModified" datetime="2022-05-12T20:53:17+08:00">2022-05-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/math/" itemprop="url" rel="index"><span itemprop="name">math</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/math/normal-distribution/" itemprop="url" rel="index"><span itemprop="name">normal distribution</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.7k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>2 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <div class="hbe hbe-container" id="hexo-blog-encrypt" data-wpm="抱歉, 这个密码看着不太对, 请再试试。" data-whm="抱歉, 这个文章不能被校验, 不过您还是能看看解密后的内容。">
+  <script id="hbeData" type="hbeData" data-hmacdigest="ff84e94cac3e2e4a8610380ed2f2e5d8e57b8d52303a96c4e64dcfa8b255d010">bce9cbc6dae64512b7c9955cbfce13c87410ded5af2f420306dda58d98c91046477d19084b0fd77c21c9550c375f59fbdb450ebd0288376c312780e401fa8f5857e8a58d662c699e5f413235944476751d8f128979ed4076bc454a0fb3a92b4e766bc421032559f0d974e573482494031ba5620fc06fe90b32aa27510c8d08680eb1063f55b0faffa5f3042ec9a3aeb8422a2f8745dfe7bbded3fba247b827a1cde784165dc1c5f3b9730c21117959656097ae350eb10d4987f05f5e9f9071939121c2afeb249809ba8e7d9663b13239a0f98e5f0745033a3a96f920c862cd2c9b7ff1679daea4d707abb2a3c4e7d70b842d904a15fbc55df2b8793d386820543cebfbc637250287c329b1fd52ffc2536ff6cff9570eee3abb5947109d90c7bc15288c5f7ed60c0fc2a4116267852672c603fedb017e2b99c39e714e21d8fd73b4b1ef6dd7a873fe1979788583e16b0dfdbfb8830cfd23ef9b6228adb2f8b924df01de823b76e3e826348f20afcaf247193695886b8986e77da2a14b048d711acd96f3fb699a2bcda5fd2efc8859d76627dbac5f426e7eee886636c04949780025f9dcaa5be2f89a1bfc57d0be3faf53181b71000770d1c719e9cbbb425c27527c0118f423c3322816c80a0ad3b0ea16b77a6fbaad804862e18f29eb63e1d6a0e0cbe23b53b401a3129f05071d0194aabb79888da69688117dd3892ed22e52ec8555968d9f477c8cf7a33c39ef7832227a77dd56607c52f2db834c4d964d34140be075126b16d175e531289231c2d284c2129c2f1eec60f7903a8544832f9bdb413ba517c273e86e62871aa69a186d6d5502f4886d318c8eaf070df496d817b9f13958557c0b603c1330ddf0db6b62f780793136e034e79a5a4d9435659d4d943a2b68b58921520c5e1ecaf9629e7cb989e63579cdfc06aac7f514664a6c5483d3a2fffee74304953fb3597f0003060ebe1418f0f65af593948c2f86d83c91d2f1cd6e1002efb4007045f2f160242bcf25317ca5130778fba046b82e07e8924a5a34fea09a1f258683d9be4e684ed104ddbbde22e54f534ad34f7c83634f89fed11b1fd0658246203f57bef5dd5af19cbebf703a85b7608fc00839f6e4fbfa07bcf92e5ccb60d2cfc2e511b6931a617cb1c2786909b9547d27b6b100d0d0da3470e66cc68a32013bc13bce5bf011e7eb72d4fcd3da1a794ea48507cbfeaec701e0172c84fcd1096f4f59f8ba3c6e6c13fa04e3c3a0e9ad7f1932d16bd899a5fa60f5f4ef56b3c50f2dca6ee333179e63a8db3f20b93380558a21caa85ac9ee64c918f580d9bffdddf4ccdee77c336abc1fa503a850733370f30086657326a9a5979b7927ae941947e22e9d4b00f5662f0fef085b63d77d5044aadc65e95a826f9faaade9839a0446796aca798da11e462e9ee1d92a8d325a849ac43699c7a55266aef3bbb6589837525df66faf9f25c702cb2548405be4302c8f7a630de19440ecc92f93bcac5e32fe77adef03c6a87cdea8c67d565ca32171066444235e64c80e2e486ad2277f071bf729160670b9daba5dc014ac36d00cca17227569afbb7098ff6d6c96cbd37d84ff553797d0c909399aaa522b1df5344d153fdb2d563344401dbf85beffa647bd903732a0b31ca35cd887a61374bf49555ec07bdbc733b9d7d9d6002badbd66bd98505ee7135ef4a94eef6e6a4b96ba9afe09f0052dae125f6fd38e71130d33190fe28870c28a2346aea5d98fe1f1b2a397ebe644209ec1115456cc990ab59e63d38cc36b7067dafb6b1d2c3fe5649062ec547927c269d32a1ce0efcc2efda3f1fc1a9bd8e4d35b7b26b55bec819ed50fe9cd07c70053fb60318acd569db39dc9bfbaba2d1628e9b67066232eadb8cc60b90767b2a28b1e8ef0a58c0a07aab54b903904203212cb4fc8600fadf5a533bbf7bbd57c79f837d4b1687dc19528d9d9337847ac55473469cb0d7ac6e937bc37d468449097c72a157d17d26605b14fd1e2177e5744995204a8938010c9058dd8069387455c390db87463c2bdaf35e035cba6322355e9af68703bb38d355d713ad4524447b1953f27eccaf46c0278047a1a53556dac581d955d93fde7bec6e6c34274972772d178a4ba11064c4542d5fc2efd8356b22f7380fe68adcb10af67fa77b8c2551581565674815457845ffe6d98f1beaebf242ea79122ca23adf5503cc3104580ea7092c81e747e3ea0b0c98ee29803572e24375dddfa5dc3ace92c52bea1da6be4fa4c1987602d8d4a32b6418f2773ece7bf36318144a8e9d289226702185fd0110c5476bc97997d7fa4c8b12f466773e17a2dc235d39efa776a027bd015bbc4b5355fc2c2cbc0a9cf0e3089cfddfac1149693287b2a871ecdce1d02b71b757b1f15754c9794616cd2794ba199c016c4ad50c9990558d862475389a2ddbcb0cac16e67321d5b93c2809e14411048ba709fc2f36bc2e0800d53cb846162096a7751d1a8254525f19c97b952df3e2ce7d235c31b958c1104f28a2ffa55888b45d7abd340c3a2d6fdec22053046e2e14fb946eed8f11a2c97e0587878f1add03e365ba8bd4ba30aa7520eafb3732edd979432d4f0088bc0059ee9006e4ed8a9dbbbdd74a8184311846b3f6d100ce2a814743e8cf83b70023ad2d68416a1712ae5501101ac14cf43ea8915b0c44fb57033aff8b34271222f3c96fd8c8cfcb406e3023d24e15caa5eaaf930ff992f6f792a756a26dfcf228795f7ceb981963bc40356714771f79ffc68da5fec42c538a7b3d9ada4db8616864a0144a7eba7ea1b113047b668955fbaa84f1cf2dd03bd0ef647206c2e164751ae543b546a5694552cd4dbed57d97e28a529990ce5847ba212b91513e8def07e693f757ffc145c2f1f2f33447096af39c3fef7c8d2f6937aea04eeb453ecf1ab46469a7806e5f861022d09a93449123b517395f69c644f3006971af5f54983448d4b6ca97fbdfb8fc5454a1d141796b283983286103395d2bffc1326d17a3596fbd7b086c7eaa57dccd190a61bdb169ce5a45eb1feac63349b3c0f481a5bbef76ccf738273bff66e5985dbb93254437c21bc956084c8d93dbc51e87fe23f8792f8e75ed286ce003e859a20657793b4f1af2504823b2c463bdfd22ab0cb4df22a75a171b76194c4251b60bc57c8ce4c38c8707558ffb7e445ecde76143df5c089df51d4080b6b4db6ecb7cfe82bc1d510b4cb4b641f6a0da4f30bac010524169c7e33e0a29e07d6665d0272f3a3a77ad0239784f5ebe59f3f39199ed6d74ae762bd23167c67bb966523414f32d78acd1c839d26736f60b4281f25fe154a55b5eb8bd59cee1d0a8decded76d088192c728b41179111d4cb9811d469a8dd62ea2040945b4ef33207e32f2c08a5b5d4273e1ff040b681a9bb07afa4de0553624b7fa9def0fb4ee20ee15680c2e365c73dd9aa2cd887c491f0697e9456ade136766b9a7f78d8c697f261b557787f6e3b00e8db636e40e554ece81f87cdeebd9ae94d1bb284f026ea915f9a17a32b41ebead86bfd67163829bb00ba3b1cacda2406afd141974770932301e032b88a348d5dc0cbfbd75c709b742ef1561731e23d9a0553544d6d5ebc9eccf3c3ffc1114448db2a0bf4239cf67418d3682cbbe6ea593bca957c3cfbcb58b96214b8f2e68e9cee2460173bc194c0eea2a26b3bf363b275478871d3592596f069b1e1614211b97ca2df8c0a97b114f2ebc2de39c7355b063c3317df3f723c2d9cecdb257322cfe11f50c3dadfe040a6143de1cdcef82db14416895a3c90f47dafed97b6f74f752cc7f6da13c8f6a6877c18cde1aeca2e2793aa102c3ac0dbf1ce9046ad66f1dc59cdd1b1062991c352cca12de9f5e15aac8b74f1aaa09f63c41e017b07ea1b7730a8d272b415d6caa625f5ec699225a8b4d6effbf8ea83a406f3260fa24e8c1d3e60eb52a4a257df020f05ccd3be15c73747ff0d7805709018db5aa31ae7482cfb21c0f481953bf7b41690526e599101629c35ee576d8bc9c71fd9fde5a05f756e3df732e7da29b7415d2839bf25658618e71b7c1c67c23194b3d3fa12d42f6d94b9f2f15eb2700a2dabd4308f6c07ef8aef8329a0e6ebb098fefc34e51532863b6154014928aecfae1acb60e4a9be4e1122370e68d3e94b9e4a17d7635bbc03ab6dc9604b871863363b2cfb669259c5635cb0dd3224d20adb4a540b680162671deceb6874ed08cd47e63ce2ac38211e858ed8491d3e244ece0b79e7cb1dcd16e75156fc5b130ae256ec2e87c64a7b09c60021722ec4ad24bba05c01291ac01b0a9188f9a716109d4f05204c9a4398bfae970b4b044b9cb11c678df80d3b3cb7a6ad85face41e4acfdbadc7e0020579ee8225874d923fdac4c1f03c01d05a6dcfc6db7f10224ab70214680b6cd63ffad75178f6119f1f35602f8e1b6a40b3ec0eaf3b21938f105989f97ed569f42e8d9feca07e94fddae48b1a30f02319fa83740022cd684e7d7574d62d6d4d6794a937dc95eb7bd5e42ef4160548260daf6d2802ad526806b8e23a4a6eab15e2204d7f7feb9820107e24edeb3f529e55ceb4bdbb2cb4b685d62b637a4e9471fc9bb12cf241c16e969900e427dfcdf79656dcd2f72b32bd57dca914a1d9e1052d1ae6321efa3c4cb701abdddc55d9de4ddf0092f79a9030665a954842d968969fda32c43069d6ecfd69fa72ff2c93a541df3a44cb24d5243ae77c3bec8449ee446d886ba40d4981367e0b0f4208e207180b4957b978cd1b341628c4d31db7425cb5053c180344f1431992e8b6c3cfc2de8574961739215d9a582424c75870a1470c30e06a5a949e7592fb806624f1411524089518b990ed442bb74df649913b3649ee152ff8b17a374fa93af699d0727e4c43939dad483a8d0dfe811b630c051438f125ca808bdfe6649bbf2d2b752cd2017eabc3c31a4eca2efb5f819f86bd0398fb141146bf612eec439f878e951cfb9556d07c19b8c8479bda2243099481f4364a8e3dbe4d4d3ee334479cc7cc099227f5d0f0c3b8d7197a0dabb3ad84f89dcc25dc97eb1c35da690c0e1cad501cff80363770b841b19ec3d37900f6dfc3ef8165c46f5abb11b5c73204703bf01d65f4ecab19a2ca1531a0eead9a0fad5152f5ded542a1549235dd5d2cee666841054c3cc556aba7fb6c2a718ccfe09ce57dc391743e4d88fb46201b9bc772fa12582df1fada0acec94882dfd2cd62ae0ffe18370e366b6354e719ddd7a883476d777a75e064f3b6b7227caa39e455b387912078302ce2b7d431c4dceef29d7ea491752e3ebaba954682c01b3ed9996a8197c016050b772cfea38da15d77f14aeaf13146336f454dfaf8b50ddba01c62a063a48fed6883452983edecae50615590f67a7f989e482049e04587dea808da6f954294f5855fcd898f03d066be8fc91244de37eae1bb2e912aac02d2f8d180a217d87ead2002c006c1768474d4eb2de722c6090e33966bf22ba47d10241fb57d0828419719a78ca33c178011fabec4d52e9585bfbd29b72004bd24da23e69e18de3f530dea630584b79ec107d246dc5bd151c015ed5b101a468bf7330972a95afef71eb7d3aa9185d73594457a7964b8124f41887d0b1fd13a5db8a09f3f128622726ba33b38b8b1ffb76fc26e49cab6d0686bea7f7a1a2e6445e84e0114a1af6738a0e854337e76621e72b30fc0d05b789467e7ad9d6a389f5886208e51f386d58ee02910b816a29c3cc51d47d9b367bf280219e3773b8aab2544b5d6fe5a2cde42</script>
+  <div class="hbe hbe-content">
+    <div class="hbe hbe-input hbe-input-default">
+      <input class="hbe hbe-input-field hbe-input-field-default" type="password" id="hbePass">
+      <label class="hbe hbe-input-label hbe-input-label-default" for="hbePass">
+        <span class="hbe hbe-input-label-content hbe-input-label-content-default">您好, 这里需要密码。</span>
+      </label>
+    </div>
+  </div>
+</div>
+<script data-pjax src="/lib/hbe.js"></script><link href="/css/hbe.style.css" rel="stylesheet" type="text/css">
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/math/" rel="tag"># math</a>
+              <a href="/tags/kalman-filter/" rel="tag"># kalman filter</a>
+              <a href="/tags/normal-distribution/" rel="tag"># normal distribution</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/math/covariance/KF-Chapter-Covariance-Matrix/" rel="prev" title="协方差矩阵的数学推导">
+                  <i class="fa fa-chevron-left"></i> 协方差矩阵的数学推导
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/algo/kalman-filter/KF-Chapter-Core-Math/" rel="next" title="卡尔曼滤波器的数学本质">
+                  卡尔曼滤波器的数学本质 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yun MU</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">85k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:18</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="pdf" type="application/json">{"object_url":{"url":"https://cdn.jsdelivr.net/npm/pdfobject@2.2.7/pdfobject.min.js","integrity":"sha256-ph3Dk89VmuTVXG6x/RDzk53SU9LPdAh1tpv0UvnDZ2I="},"url":"/lib/pdf/web/viewer.html"}</script>
+  <script src="/js/third-party/tags/pdf.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"starchrist.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.11.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="这篇文章已经被加密，请输入密码后查看。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="FFT 数学原理（七） - 傅里叶变换对之间的联系">
+<meta property="og:url" content="https://starchrist.github.io/math/fft/FFT-Chapter-Conclusion/index.html">
+<meta property="og:site_name" content="Yun&#39;s Tech Blog">
+<meta property="og:description" content="这篇文章已经被加密，请输入密码后查看。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-07-26T09:28:11.000Z">
+<meta property="article:modified_time" content="2022-05-12T12:53:17.208Z">
+<meta property="article:author" content="Yun MU">
+<meta property="article:tag" content="math">
+<meta property="article:tag" content="fft">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://starchrist.github.io/math/fft/FFT-Chapter-Conclusion/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://starchrist.github.io/math/fft/FFT-Chapter-Conclusion/","path":"math/fft/FFT-Chapter-Conclusion/","title":"FFT 数学原理（七） - 傅里叶变换对之间的联系"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>FFT 数学原理（七） - 傅里叶变换对之间的联系 | Yun's Tech Blog</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Yun's Tech Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Yun's Tech Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Yun MU"
+      src="/images/avatar.jfif">
+  <p class="site-author-name" itemprop="name">Yun MU</p>
+  <div class="site-description" itemprop="description">Never Give Up!</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/starchrist" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;starchrist" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:starchrist7@gmail.com" title="E-Mail → mailto:starchrist7@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://starchrist.github.io/math/fft/FFT-Chapter-Conclusion/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jfif">
+      <meta itemprop="name" content="Yun MU">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yun's Tech Blog">
+      <meta itemprop="description" content="Never Give Up!">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="FFT 数学原理（七） - 傅里叶变换对之间的联系 | Yun's Tech Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          FFT 数学原理（七） - 傅里叶变换对之间的联系
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-07-26 17:28:11" itemprop="dateCreated datePublished" datetime="2021-07-26T17:28:11+08:00">2021-07-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-05-12 20:53:17" itemprop="dateModified" datetime="2022-05-12T20:53:17+08:00">2022-05-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/math/" itemprop="url" rel="index"><span itemprop="name">math</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/math/fft/" itemprop="url" rel="index"><span itemprop="name">fft</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>947</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <div class="hbe hbe-container" id="hexo-blog-encrypt" data-wpm="抱歉, 这个密码看着不太对, 请再试试。" data-whm="抱歉, 这个文章不能被校验, 不过您还是能看看解密后的内容。">
+  <script id="hbeData" type="hbeData" data-hmacdigest="f41de45c63a2a38f94a9e01873415523f3af321a3492d7d23bf9379b898d3981">bce9cbc6dae64512b7c9955cbfce13c87410ded5af2f420306dda58d98c91046ccf9a7ab563b99c0fa28749e04fe0af74a5df1d9424e26a3f644264975274aca864f91d6fc99ece7fe67fa3317d3f695d42224bd9dbdb181db76e5f16628df348670a55cb3390586fcb837f4ffd5a43126af39c41a5f10973cdeed5b372e583a26de9210b0faf19f9620cfe2464c0dfe9c02247224a80d9dbe02e3016f171f16ef61bb24489332064d176700356344026edbab11c06a721bef3629a5e2dc11ccb0b76316a7613e3dd93906baa5ccb70c550839e5deb16816c8c4fb16cbb6462f02de73bf3ca94726461924f914c50d936d5befef9dad0c33b09401f2f0529b36be408dcbdf82f0b2778a78587056ee0097b63ebd64cfcbf1788c75fd9e27205419380a35f8123821f98d958ecd28cdfb09f6d999ea97c4f39f4ac2cbcc28d082428e87607e066e5f364161cc3dd5dbdab3d2360b477e75b7402f0f7529aee99f2a9adb0ccf02cf3cd1f5031321eedc332664a37e58dc3721c91f6d938434ff04d4a7777ebba9dfaad05aa2a45be69830b215f8429c1b43dc380f94136590d7b916ce898c65944df2048c095ae6bcab698317e5e139e6a06815dc0e6439a26a19276212c44c993a28d0d5505a723ad1a91a08045e4e722f2c32c6abb51809cd8e18e8052668fe270e7f05514a36abd59f575bfadfe4ac023f81284f14bf7088d2ac930d0c1fa557162302e11bcfb978048b7a200eecd9d20ed18d1a2cb89124ed51c13b69310ce4fdc24d009ef7bdde6af9d046464a8ce50e0a35933ee4e2bbe40f8e657934633e3f7f1ded219b039ffceaef269ed3bd92033b74c28415f366e29b7c8b954f98a865d64404b9255cab9801aa8bca5b4bf97cf4d2103baf282e4016c47ddc6d69f11a7ad280533cb6ad5ee39a906cb63969866ec61c338fb334977b93555f6f737e0c628e91a06878d9bb5bb10e2c98d8018b0b87942bcb3cd08b61906182f02f46528409ff12bb3b08906361a3bd7e6ab59db86082d83a2a34f3293ec864def6368e9b47257c3115fe1fb67881be4e10898d8193611389b10a46b45881e717dcdd1e0d8025082714b87fbfcda5ce15cc8e84692dfae8d1216b514cc074025d8e769b1efc78bf4b8a5743cfb3ef9ab069cf288d66dbc7fa5dfbf030f73d05bc48acfc864a19ddfe9159116ae53198f4e43e764ac932f1849fd0a629cd04b4c4c25762305dc574073d7fcb2945e54d708bd9279e5d1d243000e28a3906023d53a281d2057dc76e100f5b11486f27a82f1b125e520e9a62ef7acb564cdf4a320769a11ff2f65a5c42c8e9e2bfbef14758e08a14a41801d777c8317fe74f95adf8c4807163782b1ed5bec8a267e8b68993041793d7711d5b8c1aca62b2017d40c7470d9e4ba397217a177d017017e7fdffdef471ac16d810d6fe8f29fd43f437e3ff0ac4cf784a85c0e490ee3a49e10de5ce0bb8b23c1b5f0123ad3db7076013200392780e4d17a75a91ce0337f9baf535b381eda5d1b7ea4f66712771c9b5b7a682bd1cc23d1a22f8784c8e3bb248f7b3ad1da1a6f2da01ae25f4c21fb0f734310cefbe4c8ba3a529cd2dc43dbeb2e9dab5166bb1480e2ed2570c06fec2a7f4ffa5bfcf59edf677b81effa24d7fb2de67f0b95dc63f594fa142101fdbb8e1548fded0882d3cb82d41cbc7a4719ab149f1cffc7951a7a72e62c5eba0b9e6949253bf5567f458ebcde623aabd0921b4ea6fbc31d1332151c3d34510c6ca61f8055a6475843f08342a11e56a12798f2cb5ab8403ab128cf082a393b6c22847a4c97b25370f82ef137c81351d2ce6ebb16626d87e855a8c0b336b9d1baa31cc8bf7be8cf87d3f12bf96ca59fc7e534540a3f9fbf260dd093a6029d8dc603a1ee829ee11ca8a85a69c48ee52cb293ef2434cb10733e4f93630698d6fe4783e950333164c6cf2d854eb08dda6ffa4a78c474f68e1f972b66985b234b57f2787582718e2cf7997b813aa939f5617d553188a7976df887de50fd096edbcd203da8bde3459a0a8afc8d0a2d20dffc7efdbfbd4906e74ab1e7c39555f97de0d918725177c244d451b532ad0fceeb0878b059fb645a5143ceba3426a5e933255c993a3a91472c440f8d707590724ce6e8eedb715d31474a3a73d7abf15f51915dc3dfa8ad2627004f7bced3ade15e7b6b6173fbe6a35d82a0da7f9e62c1994120c17f3eae7c00f82959c19ed4ec55c9123a7cef9247c2a712d140811dabd58650aa9d9885c4408bc19a6c722cc376f6dced7e2799a2f806b370ec9a2b4c9dcf7161aceac5ec3e97b7779e019c4e9ef1a805e99e97e4aad2a098b6604cded932c1d2992f34832048f4a9cace8e7e7417940dd1863484fcfd5db9c764244c0fc6ebe4c3c58d46c8842d41676a0bdb3eb75571d75202bd13d7e162634438abc90908c698094a602672d4e8595ce42b8e03526ed6a2dfa65ea324e43d4ce71689b41e144a995258abc6b1a478fa911d2e000238f75882100b7f0293241044688cfcfae70676e69d0e6768d4a59bbb1875ffec0c0643ff965bb77a99f7a747128cb6745934458b9de6a47c9e50e789ca2184334cd4f2b905e194da9f4231c00aab54e21cce0861398c0d65cedf251b8533da290d381516c91711921626dc7efe9c956d9442bf2b20206f5fa1effee93de89b9b5fdfad70263004cd91bf3a32cb69d558ec6ff1ed28c7975fe0c24890e29eaaf4b92535b358e575b7ccf52404b2756a3ed1016666324935af492ee303ea868c567ee7a7cfe87af019501a04614505c93d0a93bdfb194491933f6de6fecfc4977dcf3fcde306eb28792dc4267373a35200f1a25e4e775975af4b87b9721f2dbce7f7285946ca3af69a476e18170c5cc950c87dd4d953578bf5df3d9bb7ce2f0492b96299a15869ffa66f61265f631ebc816d32e2f09a70b4aa1eccc5a889379ac853ed0098549c43448c8292d96d5e3e540e4e1598c5f49e0d6281763428825e2a5efed92380213f2cec7bccc15dd352bacd6bea149c9aa4f6710a6ea8fb42fece667f8ffbeab952d6861c6d3f04181e8346e33986c84eafbb55f47927aa7dbeadce55153fea0ac3c5367ab59cb948530ad74b1f35571c03345a61068286539dccdc587688f2d36e03b28e23862ed56861680ac41f4f5c2c425e31ec0c6a8b606cd062f1852febcbafce8201501ce019779ccfedb376d4acd5e666e19b1c17af9aab7185722152e1cb166344eb5fb9a73f5c80559cc0e570595e45bfc76572e4aadf3047a262da3586d743201911dd22948edfd505d2147046a947e1c5b0c89991b6c3fea94224745cac337c7f15e09997a8f22cb696e35cf8a498b1e604d473872476c55264311efc5462d83536b47831a09e7f38732e07764c60ee6e1badf071b632ba807b7c50379625d90a1fc1341adcb7f0ff61236d21b90bfc08e41f714fadfc41861b09c0c230704413116fda007693c03fd31a61bfdb5d9d975dd50d6152887a133e51054b57852ea96033315ed12f31d34227d6a3f9152c4138e626cd488c2e6860d93054698513d3260295fe7d67b35dd6fbab8e70efdec382ba15fbf7db1f46852c8ad55a050606e0a223ab3bfc9762d1d61cdcca27586040bda7551b826a0f1bf36067bfcb9ec171830d39a24422fd6a600dc84c4dd42f0e6a96f10d62d6273da6eea79241623180ed64eda6c1a8cb407b086f95dd06529220f8363e18700500c3bd69eee41f5ee544d98aa5d59a9525b24b4d6a56f903dba2c55d2d7f51738b2dc73027b74fa21cd8dbd0a152aa93bcc6d9f99b1105a5781ac299db0a243d0e92a303f7fa329ec9e430d8e44f88d366c0e08bb4ebe9797e9caa9346a7cb15e07e7eab3e062c4519b65cd9bb663259a7aac4a6bc2359f03d3c60b2d368091f65b99399b7173eecafb212d05ca71b70c68aa762dbc7478895552d6c51d0ac916179a9f5336ce20fce6da42ac910f98082c28e575a2f95373b7405dab5614b1eb4bf3c2f2f55f4d7bd22a4abac15c896bed79e3955c5e5726058d83e05b75125fe193aadb8cef9556fa3b26ceb3b97e0a4856619f3ac58e78e63d38e4a7a04f5cd85dfb38e51d1b0db651d6e89420a013584eadb406051b4407139c17140f7597279950d32bdce58c0f0ad8ac6e0cc54cd6e826b1e1f1d3c4d7e64eaafef6ba188ae660cfee6f39acc27af92d6b8845092d05df941baee3756c7970aaaf19467478c1cb3127d2c8dcb926718941c2ae538f8d69de7d528fe833d3566357b3914a421651a16768f598d9bf1e0a8556a53ba79ed79bf5607c09ca1c7fdad7a19aa9f5ac8b5edd878cf2665c6c4864d03a5bfc9583283bc85fa205441fa716b9059db55779204cc5a7b8781949a662d8a804cb8349852c8da9368672188fb7847ad212525262e5962d2628d15b1ea0d4f41e36ece8c8239cb68637af91bd1a5fc640a77184ef1e1dfe1938f70948a93afc66770259c79951ec6bd73e3cccf3901905acfed7bb1da4257f36fb167ad8cb4ad1cef11fb1b4384fa650b1dd65706faa3e07f4fecba762559fa05c665f3efafcbe0814876c141d1bc5afee6f7e4faa76af8a2ba2d6ab12aaa643e97e31d1580363d40eb10ae9633f72cd508601af7f73621936ae356135fc23d3c6e60fdfe76029a14404729cbff2566774e9e563b5d3d14cf8541648f90658379fdfcc0ab3ef59a13c789375a2133a692e00c01f39839e5f2a779e243f3575cd18f9fe7f17478646fe6ff78dd2bc75530c0176a3eab12e28f302bae913213d8d07efe0328020df78a5ed952ad26c96589a7b501f1173582315e4833fe98ecaf81dbd089994c961c21e7c1d32231880624b418f240276b5f4b98a617db5bbeca7d0087094ed01ddc9371ccf079426b9e2e32ab8f1a5d52e4303bea6387fb95e48d0e5135aa47bf6a9d908c92573a8edde40f8b10f09b24f037da3fc59cc3432e8f372553dac45f82ea590f4cc13e0815a239c2508b4e6056de29351319878eaf3e07ea8</script>
+  <div class="hbe hbe-content">
+    <div class="hbe hbe-input hbe-input-default">
+      <input class="hbe hbe-input-field hbe-input-field-default" type="password" id="hbePass">
+      <label class="hbe hbe-input-label hbe-input-label-default" for="hbePass">
+        <span class="hbe hbe-input-label-content hbe-input-label-content-default">您好, 这里需要密码。</span>
+      </label>
+    </div>
+  </div>
+</div>
+<script data-pjax src="/lib/hbe.js"></script><link href="/css/hbe.style.css" rel="stylesheet" type="text/css">
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/math/" rel="tag"># math</a>
+              <a href="/tags/fft/" rel="tag"># fft</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/math/fft/FFT-Chapter-DFT/" rel="prev" title="FFT 数学原理（六） - 离散傅里叶变换（DFT/IDFT）的推导">
+                  <i class="fa fa-chevron-left"></i> FFT 数学原理（六） - 离散傅里叶变换（DFT/IDFT）的推导
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/math/fft/FFT-Chapter-FFT/" rel="next" title="FFT 数学原理（八） - 快速傅里叶变换算法概述">
+                  FFT 数学原理（八） - 快速傅里叶变换算法概述 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yun MU</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">85k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:18</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="pdf" type="application/json">{"object_url":{"url":"https://cdn.jsdelivr.net/npm/pdfobject@2.2.7/pdfobject.min.js","integrity":"sha256-ph3Dk89VmuTVXG6x/RDzk53SU9LPdAh1tpv0UvnDZ2I="},"url":"/lib/pdf/web/viewer.html"}</script>
+  <script src="/js/third-party/tags/pdf.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>
