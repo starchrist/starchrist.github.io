@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 6.3.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha256-AbA177XfpSnFEvgpYu1jMygiLabzPCJCRIBtR5jGc0k=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"starchrist.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.13.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="这篇文章已经被加密，请输入密码后查看。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="FFT数学原理（一） - 三角级数数学原理">
+<meta property="og:url" content="https://starchrist.github.io/math/fft/FFT-Chapter-TrigonometricSeries/index.html">
+<meta property="og:site_name" content="Yun&#39;s Tech Blog">
+<meta property="og:description" content="这篇文章已经被加密，请输入密码后查看。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-07-25T12:02:42.000Z">
+<meta property="article:modified_time" content="2023-03-29T04:57:17.267Z">
+<meta property="article:author" content="Yun MU">
+<meta property="article:tag" content="math">
+<meta property="article:tag" content="fft">
+<meta property="article:tag" content="Trigonometric Series">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://starchrist.github.io/math/fft/FFT-Chapter-TrigonometricSeries/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://starchrist.github.io/math/fft/FFT-Chapter-TrigonometricSeries/","path":"math/fft/FFT-Chapter-TrigonometricSeries/","title":"FFT数学原理（一） - 三角级数数学原理"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>FFT数学原理（一） - 三角级数数学原理 | Yun's Tech Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Yun's Tech Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Yun MU"
+      src="/images/avatar.jfif">
+  <p class="site-author-name" itemprop="name">Yun MU</p>
+  <div class="site-description" itemprop="description">Never Give Up!</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">33</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">24</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">33</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/starchrist" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;starchrist" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:starchrist7@gmail.com" title="E-Mail → mailto:starchrist7@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://starchrist.github.io/math/fft/FFT-Chapter-TrigonometricSeries/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jfif">
+      <meta itemprop="name" content="Yun MU">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yun's Tech Blog">
+      <meta itemprop="description" content="Never Give Up!">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="FFT数学原理（一） - 三角级数数学原理 | Yun's Tech Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          FFT数学原理（一） - 三角级数数学原理
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-07-25 20:02:42" itemprop="dateCreated datePublished" datetime="2021-07-25T20:02:42+08:00">2021-07-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-03-29 12:57:17" itemprop="dateModified" datetime="2023-03-29T12:57:17+08:00">2023-03-29</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/math/" itemprop="url" rel="index"><span itemprop="name">math</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/math/fft/" itemprop="url" rel="index"><span itemprop="name">fft</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.7k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>2 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <div class="hbe hbe-container" id="hexo-blog-encrypt" data-wpm="抱歉, 这个密码看着不太对, 请再试试。" data-whm="抱歉, 这个文章不能被校验, 不过您还是能看看解密后的内容。">
+  <script id="hbeData" type="hbeData" data-hmacdigest="e6a5ddd52475d7e23939c4f508005a9a27d20c3222fbcf2cb4b9c2996d631fef">bce9cbc6dae64512b7c9955cbfce13c87410ded5af2f420306dda58d98c910464155011be98aeb76998589cbce4a37398383c3f4ce744f46ee6a17bcc5fbfd1642f2d0f61e8ed4e09a31f99cd31a7fb1536ed1c93d1183591f3d6b2cce16c270589f193d3bd2494b7be9d223329d62ba4ca7c0511de8bc60e906eb44df396dcb1522590babf06a7e108bd465b09628fd95dc088cea72f7639c22b4365620106793cac578e02c1f511b5ca22b614fbfb443dda7bad969e07214eac8215c7e1724881d7f4c5f16cb648ab1e70a6145df4658d94bd0c28337d29f71d4d732cc0519ff9d2dadf4c2391ca92d546eefb032347ba78e825a4cb92342cee34088e211c6747af658b586e212cfa97b1fb9e684a755939ab65ea4beb32f86045740f9aeca6faf802fffcc1f5d6a4e3305b5ec1d643df1cdd544f537cc5cdfc84d57267cd6549e463db1459d80ecdb966ea57de7ef3b88c7a3735d10e9706233b2505235f3328baa00199bb980528110b9d8a1c48e55b91708d1e40bac7b60c7fabaa861cd47f18771c8e2cb2095a035b3aed9b8ecd978b17d468b72d77d5c82d34bc1b063ad58f7a47d8d0cf5b00eae1cde1672ce5e50b519fbe16f6a256667cf97c192ce11b84b2aa8dee88b9a00c0e7adfdfca736f2df30f35de78e7fe483aa9c3d9b173b435f2919078a348294ddad2eebdc15aab2c380d1258cbeaa2d91c3e836543aabefa80b9422f54d7fd1008e86ec479adc68d7b1deec6c061363e9647e704eb410f842ff4c2fb983b731d4d9614033a2796427a932b6f27d8f34a60b3de434ee00bd4c3cfe91fafaf26b8c73ac93d17204e6ad637e3b8ce62c6d35305d6f7d65177da626aba1a1f28e6d970cf929a79ffd8af5c621cfee4252fd42380a9a5ba11cbad692a567e1b542feff8441fb66a3ce991b16f9988ce8a3247ab03745a641823011652a28f6ca1d8a3975e7eb2db717aa9258e48969470268b76779111034319b66823243b9de0fc804bc10eefbdbf6768d6a7831a15f3a81e94427eeed3b249911b2a671bb70c04c3a6cb7040d35094db64540567a4b442c0764afa19340ace608078d4171f9a69fe67753420009b6773b195ad3ed37a6029f6f5f06361b95f67f48096397ddbbb02c92072496989f3b337f95482c618913b6c548dea76b6cace66d475cd11150a56bb2c82784fea9dfffd6cf2afcc73a5747ee266cea0918130645fb1e251f3e07b9a79e8100ff0aca056c9e6c1f2508fe46acbf6140043ec4c5da9cd7a7b3664162cafffc050710d2fd9015abba4d93bca89918b41f2019300fb048687d3cf8a0133d6fc9651b30d12f21fed29b5bd341450171b049edbc6db89b4c297298965d0a2deb596dec98968ec2ae6a0f64172b7dae0f830d6fc67c4ed6f554f4809be50f12fd3c7648f2093dfe0a2315c2268e518c57cb2b6cc7133bb9e32af387505a0877a7d5dc414bf19610ab664b2ed1fa15438dada7c3371a0c1e6c0568c974730003c4f643e02c793c6de7ef326547bd66fda6620eaeece7da54bf97fa2eb7901a2c30d8debadb759da4568ca336ff7c1c353722ee62686c01581ccdc8085d8b1b248da39fdd402c2ed95e9b2a7c23f42beb99046aa2cf6f1b5ef116f0bc24e60cd19a1016521d49ada2f7ed3366fd653f65161d722b69d6a29ed159208871f540dac5b1f0f9dd9cb0f210e236d7aa26f5c77af1007bb4c7f675e069a094a44bbc2b26eb7f25426a7dbd316ffdba6ea5fcdc8af7d7633be27d2a45cf1a15565f5f10d0b2d454ad48775f66cc008378c86f4756917116c6b3e986dc8a16589c3cea689482134aae2e18611ded4a40cd764f272f821bb23f118683131710d7e2668011c3e1b7ebf18a6e175bec6f9e2220360c8b071c9d062da4b0f86be819ab65f2a0dd22245808759b449ae122d5e78a8b9d953e61f4020a785dfd243614468cc9500b01b64664ab4e5b40183ea60984de965fa4ded46942e1a533465b127e80c3287f7334973c319d8ff49946b34ba0e68408dd2e594011c717a932d1ac2f7a71354e97ae62c0f33dd7017f657322540dc5970b4375a99b73691522b1d96cc5f0cd3bb0a0c002648cdf5c556c9e2ffc3d92320644fc3595a1deb18b87804ff381a6f93acf7c218771856ad77c7e71e2695c9feb011ebdd9133c02acc62624ff4272ffe6ed575d5cfebe8e66eaee92e99d5c9ec93cac6c9aa59464434a2ed5710387fcdd51ed234e65163048161f3817e04210640baba67edb70f6d9e5346f577e8503d035539f9bef5f6e658d3a1d60382896400341a26e626b90a342e40eb4076000214ec7df13a45de6288ae61ed274c4ea878df9c1ed201f6be6a562b33bedebf6c6d1e5054435f2fa31ae8744dc482d5e38238544b7c6bbe30ca392f523a417b867694f64370182b9137d656c805cf26b03c47c58b9280785f248543020c1620c8bb33d692dd0f482c05559a4f44d0daadc90133495d95f36c5d537cbe4af167c9ab61f87bef3579996040aabfa9e649bf3772b027bafab878c596cea479e43d886b7bebd15203557c20fbc066222e7a66124c1c5085e27fb8953e4f7abcdbe4710449f9dac021483e699cca6f268a2cd3b6b48df4ac9a938dbc66bd0342d4a31e85d2421325ab9bea1c9ca541f0d6080e45d0bf1ef7845ac55d0bca7c220cf842dd8adf38f54cf2611a901cc552b2a945b288b3df917248fc3297c365a40e12ed6b9e4f8258b7c7d776adab53564c730bab580935e6e57a1b7804f56c2ebb1d751f2385e3c35d170d1b8e6ac09a6df654c2d9a01edf9328c8a31629eb60b6c4b9c42efdfbb019d1c4c4646f0bc1a3f2f1a66d3bbb4357ac420cb6fc8fe2ca2c04848931f995e01c6910771bdea37b49177c7bc510074d27cb396db2b1e42eaf69a7f5d96ae5932e403a153e065f25d6a98bfa0c5ef91bb74d0268300ff2fec84048bb51b327914418139e16b575739742bc9af47b8170362890a1bf1e0d258d74d8dd8eb2ad662ad25519110a034d43773f8f799e8feab4160d88ae053074e1859c95fd66880f5127552861db7fc3fae86858338af92b1880650c3e67fc492e7594934a13db315b996cd565182b94ead993d364740bb9cc17cc068d226251eef504bff6e13e7957a5825dae882e9d6bb494745caad030d1b7ef83f6b76de835a991fdf0cfef15bb7f6a270bbed12248fc42d24937f911ca6bece4080fc358d53200ccd7f56399a633657bc2871ddf0cbb2994cc4a5ac4c07527ad40cbf4be792b8ecca409978ff850979db2652bbae5d24ca883c0bc740657c8ca283467a8ff6024e0e1dc125c1f5f7c4a2aa1797aae382d879e52d6ce0f78c82e112497ce76c16f4d40352797d9eb0689aef163ab20986e8ca2772eb13366f182af097f1cb0f982b8d9f59a97973645ac2b042197cea78376c1ffcd7271cd2aeb02d2e5b60106ed55e96be8d01c933190a56bc701fe752910a357a1293fcff9835679d674686038e4c537ea920f02e44dd1b2b45c9e58b4e02b76a134248da4d43bcdb07d3656cdaf15f7558ff8a0e0f5f00e724c0c714404a682373e64626f26c2dc119bbbd6b10c0290e1a55383cea0387bc17ed7490748a2aa3ec1468156deeb0ae30c3b4dee6f7c069b62f0d27093ccbb5cefeb2c8be9ec446a2c9625d7519f25aef359b434d0d7b4dd81073f59f881a5b3afc8f55743582695209a516a55c1a10ab15a7c2b904e2b723610c9b84f287a29ad7b4a2a24ebaf29db6216604366b92d0a1c32629c0d76ab0e211243d18606615de752beef1b912d9f6cd7f216de0126794a9780cc57dae0fb5cf929841596cbfc56cfdc34dcb207f78956b5846adc3d5c2677ca8d7613e576a034be273b071c6b9c1b73c9a6f49e27f4e01607aebd0eae263cd80b9cb70d1fd61f71b45f9739b0ed38ec92e6d3b30fd44d238a6ed0992e64e4e48320dd810ef5dbf900de276ead9dcbb4d79faa9ba5d39584f84ca7a56b32e7f0f9c5d853366a6c5d80867613b2a43c0c5aefcd8e1b60ea43fb48af40442967c1aa70690c237173c1683a4eafe666e39c0e3dca36ecf6e2b051d3e0aad97a5ef61d3ff89beb1e6926444f754dbf99dadccf89a3224a886461128174b6be6c3738eaf4886ebea90aec999887962c628b44b79ceded603eb5a2bd71c9b2428f33093df0a097e3c351359b684575d739d8fa39004adbc87e5392d146b3c182616fec1c1401742b226c1373a441db4d088cfa059fe85ca72a4287103f81811fd349dcac725cc8da6ff7605463f80671d81774d467089161031da2d45c82e0128453ed230261bb067a460c36fa1f2bbdc695a8db569b6442cc81229fddb579667147d46a4ab574bf00e3342afc00238ba793fb9ea8f9a8db6812f4bb5b5542fb1dab39e4e67790c6f6f38280abfe923b684791f71cf48068f3501b9580a45d8a5475ee02544df56e2d1b5e1bed4dcb17e3706d9316cdf7df2faed2a1e111096beab7b88b5068d7c36e4975497c1df75417b30529d1dadd22907e2b50a51176d695458d39ed7d9221c9ff22353deb2a0920d7f4d08e894a507450ef0192688a898c3b6e1db98403304f211c9ac607cd589d411e5f2582cbeca4875e3ff65901b007269521c7b4cdee58e1da8b4dfa633b89e990c479ddf1a0edd9e5f055e4837eaefcfc086217c2c2ff6c267db53b2e10da863695554a47321ea47945dbc76b837fb664d3d6e284a9340cd59b80d5f640cd06e62e75874298d28a4a038dfa2696cb1a5ffc349a101061fee740df20c455dfb6289329b72d02ed7f6052caaa02e6132a43b03748275f3081e54a0417334c5b57acd1ab3160dd02ed31d3ea981dea3c433505743859993a5ff1090c85e70b1ec982dbb6147f956513379b5ecc5dfafbdf2ea87d41811985d748e14f5835fc80a6da40f82faf5fea360b548daaf3c2304d1cfe25315d2c71b9b71a089ab1a90c3f403dc2f118398ad544729d3b216ab8412f679171cb9fe04177b1e2edf86ad0334c1dff69ffa69780d38f17c02f4ff6bc475144fbf0619bd8ce242a001a0ce170810f432a59ac94720ec7a37ad17b9004fb2f55b7c8dc575210efc3f25a1fb25ad1a78aec3cf3f08ada47463a255be379a5bbe907e3fdb47be0a38e39b9524ffd1cce18cfe0363a41d353754b9add140a9c15df0a9ee74c2a2cad516c487da67906e5cff2155776b45b0a0222dac8b9cfeabf5cb05d06caf613ceea4d20c40ad7ee4afb296a83f2a1c3cab0d6bfabdfe0fa11ef87296455fdeec360ed451323f8e32769e58676443d9514355c67e732595b89d7dc91da8d1b3dcf0110191b1722f9df576bd8939296536e72eb32cf9a97fd3e36d61b19ee5db41eb0fe272068803cbf389bb77c26a8eb6c3342b9284fd3681df82b52ea8d2b15afca87e6f3efbe92be89e760d035e2c52ac858b3a452dac2cdd8928654ad88c620c0d0e770788893c974bd3384f5450af7cd7f1ce457472a9b5e8100f4454d92196bc1701b123f355dcf612afa58e69ba0dac4a2b0f1062e545e0fe6ab89d8245230fe02ba4a6d83b98cc71a13fbb06c0ecf156b8464571c9a65713fe4173c5948e7d1eb4f318eb9ab4e904da01a1f843bffe6b91be5faca7fe6e82ea9fcacfd529504cdc5b145bdf08f31339620f2f6bb6082f9ada6982e37f72542dda29a5f1061adb93750572a1c7a03fddc90b433546e098ed2cb6600dc930a27f2026b887087382b0413982aa81c0579ec1d9e4c3768777d4c50fee4c97e4d17341970bf784b44caf5875ae95d8f238c0de71d2e98ad8edd44ebdf81a294f7b892e0ad5322a810de011a4a651c26103f64fc535edd87dbfd3c81db1f81ad576d56a27234605085b0f62bd1378d1d5b91d9dc1a12ee23f7a3eaa51e6684f27bf51d3fa17d72f2e55a2adf61ed18e47344ff33775593970b5703682ab5374a52887fe3f95f8bd405b388a88c8d1612ba34bbf53f12972629a78bb51340912a605aca0099cc4d2733eb5adb45591922a4722def1dfc810f87cdc346332ce187d2727a958e5664897ce5ef46f1f2eb2c3f855469d4d99e35c5a0f5d4142dbceecad4e79fc241774f58b0f8e7993f463f6eb5304a4a24d93d86f5f2f3a85cd42296e7cd9d2aaf7fb5b31ca9e937d11b3</script>
+  <div class="hbe hbe-content">
+    <div class="hbe hbe-input hbe-input-default">
+      <input class="hbe hbe-input-field hbe-input-field-default" type="password" id="hbePass">
+      <label class="hbe hbe-input-label hbe-input-label-default" for="hbePass">
+        <span class="hbe hbe-input-label-content hbe-input-label-content-default">您好, 这里需要密码。</span>
+      </label>
+    </div>
+  </div>
+</div>
+<script data-pjax src="/lib/hbe.js"></script><link href="/css/hbe.style.css" rel="stylesheet" type="text/css">
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/math/" rel="tag"># math</a>
+              <a href="/tags/fft/" rel="tag"># fft</a>
+              <a href="/tags/Trigonometric-Series/" rel="tag"># Trigonometric Series</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/tech/blog/Hexo-Next-Personal-Blog/" rel="prev" title="Hexo + Next = Personal Blog!">
+                  <i class="fa fa-chevron-left"></i> Hexo + Next = Personal Blog!
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/math/fft/FFT-Chapter-FS/" rel="next" title="FFT数学原理（二） - 周期函数的傅里叶级数的数学推导">
+                  FFT数学原理（二） - 周期函数的傅里叶级数的数学推导 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yun MU</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">156k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">2:22</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="pdf" type="application/json">{"object_url":{"url":"https://cdnjs.cloudflare.com/ajax/libs/pdfobject/2.2.8/pdfobject.min.js","integrity":"sha256-tu9j5pBilBQrWSDePOOajCUdz6hWsid/lBNzK4KgEPM="},"url":"/lib/pdf/web/viewer.html"}</script>
+  <script src="/js/third-party/tags/pdf.js"></script>
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

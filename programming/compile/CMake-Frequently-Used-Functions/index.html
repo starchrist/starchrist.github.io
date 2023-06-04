@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 6.3.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha256-AbA177XfpSnFEvgpYu1jMygiLabzPCJCRIBtR5jGc0k=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"starchrist.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.13.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="概述 这份文档主要用于收集和整理使用到的cmake指令，确保对齐内容有准确的理解。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CMake常用函数的说明">
+<meta property="og:url" content="https://starchrist.github.io/programming/compile/CMake-Frequently-Used-Functions/index.html">
+<meta property="og:site_name" content="Yun&#39;s Tech Blog">
+<meta property="og:description" content="概述 这份文档主要用于收集和整理使用到的cmake指令，确保对齐内容有准确的理解。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-10-18T07:44:35.000Z">
+<meta property="article:modified_time" content="2023-03-29T04:57:17.295Z">
+<meta property="article:author" content="Yun MU">
+<meta property="article:tag" content="programming">
+<meta property="article:tag" content="compile">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://starchrist.github.io/programming/compile/CMake-Frequently-Used-Functions/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://starchrist.github.io/programming/compile/CMake-Frequently-Used-Functions/","path":"programming/compile/CMake-Frequently-Used-Functions/","title":"CMake常用函数的说明"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>CMake常用函数的说明 | Yun's Tech Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Yun's Tech Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#find_package%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E"><span class="nav-number">2.</span> <span class="nav-text">find_package使用说明</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Yun MU"
+      src="/images/avatar.jfif">
+  <p class="site-author-name" itemprop="name">Yun MU</p>
+  <div class="site-description" itemprop="description">Never Give Up!</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">33</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">24</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">33</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/starchrist" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;starchrist" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:starchrist7@gmail.com" title="E-Mail → mailto:starchrist7@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://starchrist.github.io/programming/compile/CMake-Frequently-Used-Functions/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jfif">
+      <meta itemprop="name" content="Yun MU">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yun's Tech Blog">
+      <meta itemprop="description" content="Never Give Up!">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="CMake常用函数的说明 | Yun's Tech Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          CMake常用函数的说明
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-10-18 15:44:35" itemprop="dateCreated datePublished" datetime="2022-10-18T15:44:35+08:00">2022-10-18</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-03-29 12:57:17" itemprop="dateModified" datetime="2023-03-29T12:57:17+08:00">2023-03-29</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/programming/compile/" itemprop="url" rel="index"><span itemprop="name">compile</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.6k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>3 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h2 id="概述">概述</h2>
+<p>这份文档主要用于收集和整理使用到的<code>cmake</code>指令，确保对齐内容有准确的理解。</p>
+<span id="more"></span>
+<h2 id="find_package使用说明"><code>find_package</code>使用说明</h2>
+<p>对于有第三方库依赖的项目来说，<code>find_package</code>指令是一个非常便利以及推荐的依赖包处理工具。下面的例子就非常好的说明了，如果有对<code>OpenCV</code>的依赖，<code>find_package</code>是多么的强大和便利。<a
+href="#fn1" class="footnote-ref" id="fnref1"
+role="doc-noteref"><sup>1</sup></a></p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">add_executable</span>(my_bin src/my_bin.cpp)</span><br><span class="line"><span class="keyword">find_package</span>(OpenCV REQUIRED)</span><br><span class="line"><span class="keyword">include_directories</span>(<span class="variable">$&#123;OpenCV_INCLUDE_DIRS&#125;</span>)</span><br><span class="line"><span class="keyword">target_link_libraries</span>(my_bin, <span class="variable">$&#123;OpenCV_LIBS&#125;</span>)</span><br></pre></td></tr></table></figure>
+<p>基本的工作流程如下：</p>
+<ol type="1">
+<li><code>find_package</code>在一些目录中查找OpenCV的配置文件。</li>
+<li>找到后，<code>find_package</code>会将头文件目录设置到<code>$&#123;OpenCV_INCLUDE_DIRS&#125;</code>中，将链接库设置到<code>$&#123;OpenCV_LIBS&#125;</code>中。</li>
+<li>设置可执行文件的链接库和头文件目录，编译文件。</li>
+</ol>
+<p>Tips:</p>
+<ol type="1">
+<li>The <code>REQUIRED</code> option stops processing with an error
+message if the package cannot be found.</li>
+<li>对于<code>find_package</code>更加详细的指令说明可以参考官方文档：<a
+target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/command/find_package.html#basic-signature">Basic
+Signature</a>和<a
+target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/command/find_package.html#full-signature">Full
+Signature</a>。</li>
+</ol>
+<p><code>find_package</code>搜索路径：</p>
+<blockquote>
+<p>The set of installation prefixes is constructed using the following
+steps. If <code>NO_DEFAULT_PATH</code> is specified all
+<code>NO_*</code> options are enabled.</p>
+<ol type="1">
+<li><p><em>New in version 3.12:</em> Search paths specified in the <a
+target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/variable/PackageName_ROOT.html#variable:_ROOT"><code>_ROOT</code></a>
+CMake variable and the <a
+target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/envvar/PackageName_ROOT.html#envvar:_ROOT"><code>_ROOT</code></a>
+environment variable, where <code>&lt;PackageName&gt;</code> is the
+package to be found. The package root variables are maintained as a
+stack so if called from within a find module, root paths from the
+parent's find module will also be searched after paths for the current
+package. This can be skipped if <code>NO_PACKAGE_ROOT_PATH</code> is
+passed or by setting the <a
+target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/variable/CMAKE_FIND_USE_PACKAGE_ROOT_PATH.html#variable:CMAKE_FIND_USE_PACKAGE_ROOT_PATH"><code>CMAKE_FIND_USE_PACKAGE_ROOT_PATH</code></a>
+to <code>FALSE</code>. See policy <a
+target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/policy/CMP0074.html#policy:CMP0074"><code>CMP0074</code></a>.</p></li>
+<li><p>Search paths specified in cmake-specific cache variables. These
+are intended to be used on the command line with a <a
+target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/manual/cmake.1.html#cmdoption-cmake-D"><code>-DVAR=VALUE</code></a>.
+The values are interpreted as <a
+target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/manual/cmake-language.7.html#cmake-language-lists">semicolon-separated
+lists</a>. This can be skipped if <code>NO_CMAKE_PATH</code> is passed
+or by setting the <a
+target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/variable/CMAKE_FIND_USE_CMAKE_PATH.html#variable:CMAKE_FIND_USE_CMAKE_PATH"><code>CMAKE_FIND_USE_CMAKE_PATH</code></a>
+to <code>FALSE</code>:</p>
+<ul>
+<li><a
+target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/variable/CMAKE_PREFIX_PATH.html#variable:CMAKE_PREFIX_PATH"><code>CMAKE_PREFIX_PATH</code></a></li>
+<li><a
+target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/variable/CMAKE_FRAMEWORK_PATH.html#variable:CMAKE_FRAMEWORK_PATH"><code>CMAKE_FRAMEWORK_PATH</code></a></li>
+<li><a
+target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/variable/CMAKE_APPBUNDLE_PATH.html#variable:CMAKE_APPBUNDLE_PATH"><code>CMAKE_APPBUNDLE_PATH</code></a></li>
+</ul></li>
+<li><p>Search paths specified in cmake-specific environment variables.
+These are intended to be set in the user's shell configuration, and
+therefore use the host's native path separator (<code>;</code> on
+Windows and <code>:</code> on UNIX). This can be skipped if
+<code>NO_CMAKE_ENVIRONMENT_PATH</code> is passed or by setting the <a
+target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/variable/CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH.html#variable:CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH"><code>CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH</code></a>
+to <code>FALSE</code>:</p>
+<ul>
+<li><code>&lt;PackageName&gt;_DIR</code></li>
+<li><a
+target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/envvar/CMAKE_PREFIX_PATH.html#envvar:CMAKE_PREFIX_PATH"><code>CMAKE_PREFIX_PATH</code></a></li>
+<li><code>CMAKE_FRAMEWORK_PATH</code></li>
+<li><code>CMAKE_APPBUNDLE_PATH</code></li>
+</ul></li>
+<li><p>Search paths specified by the <code>HINTS</code> option. These
+should be paths computed by system introspection, such as a hint
+provided by the location of another item already found. Hard-coded
+guesses should be specified with the <code>PATHS</code> option.</p></li>
+<li><p>==Search the standard system environment variables.== This can be
+skipped if <code>NO_SYSTEM_ENVIRONMENT_PATH</code> is passed or by
+setting the <a
+target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/variable/CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH.html#variable:CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH"><code>CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH</code></a>
+to <code>FALSE</code>. Path entries ending in <code>/bin</code> or
+<code>/sbin</code> are automatically converted to their parent
+directories:</p>
+<ul>
+<li><code>PATH</code></li>
+</ul></li>
+<li><p>Search paths stored in the CMake <a
+target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/manual/cmake-packages.7.html#user-package-registry">User
+Package Registry</a>. This can be skipped if
+<code>NO_CMAKE_PACKAGE_REGISTRY</code> is passed or by setting the
+variable <a
+target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/variable/CMAKE_FIND_USE_PACKAGE_REGISTRY.html#variable:CMAKE_FIND_USE_PACKAGE_REGISTRY"><code>CMAKE_FIND_USE_PACKAGE_REGISTRY</code></a>
+to <code>FALSE</code> or the deprecated variable <a
+target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/variable/CMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY.html#variable:CMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY"><code>CMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY</code></a>
+to <code>TRUE</code>.</p>
+<p>See the <a
+target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/manual/cmake-packages.7.html#manual:cmake-packages(7)"><code>cmake-packages(7)</code></a>
+manual for details on the user package registry.</p></li>
+<li><p>Search cmake variables defined in the Platform files for the
+current system. The searching of <a
+target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/variable/CMAKE_INSTALL_PREFIX.html#variable:CMAKE_INSTALL_PREFIX"><code>CMAKE_INSTALL_PREFIX</code></a>
+and <a
+target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/variable/CMAKE_STAGING_PREFIX.html#variable:CMAKE_STAGING_PREFIX"><code>CMAKE_STAGING_PREFIX</code></a>
+can be skipped if <code>NO_CMAKE_INSTALL_PREFIX</code> is passed or by
+setting the <a
+target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/variable/CMAKE_FIND_USE_INSTALL_PREFIX.html#variable:CMAKE_FIND_USE_INSTALL_PREFIX"><code>CMAKE_FIND_USE_INSTALL_PREFIX</code></a>
+to <code>FALSE</code>. All these locations can be skipped if
+<code>NO_CMAKE_SYSTEM_PATH</code> is passed or by setting the <a
+target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/variable/CMAKE_FIND_USE_CMAKE_SYSTEM_PATH.html#variable:CMAKE_FIND_USE_CMAKE_SYSTEM_PATH"><code>CMAKE_FIND_USE_CMAKE_SYSTEM_PATH</code></a>
+to <code>FALSE</code>:</p>
+<ul>
+<li><a
+target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/variable/CMAKE_SYSTEM_PREFIX_PATH.html#variable:CMAKE_SYSTEM_PREFIX_PATH"><code>CMAKE_SYSTEM_PREFIX_PATH</code></a></li>
+<li><a
+target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/variable/CMAKE_SYSTEM_FRAMEWORK_PATH.html#variable:CMAKE_SYSTEM_FRAMEWORK_PATH"><code>CMAKE_SYSTEM_FRAMEWORK_PATH</code></a></li>
+<li><a
+target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/variable/CMAKE_SYSTEM_APPBUNDLE_PATH.html#variable:CMAKE_SYSTEM_APPBUNDLE_PATH"><code>CMAKE_SYSTEM_APPBUNDLE_PATH</code></a></li>
+</ul>
+<p>The platform paths that these variables contain are locations that
+typically include installed software. An example being
+<code>/usr/local</code> for UNIX based platforms.</p></li>
+<li><p>Search paths stored in the CMake <a
+target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/manual/cmake-packages.7.html#system-package-registry">System
+Package Registry</a>. This can be skipped if
+<code>NO_CMAKE_SYSTEM_PACKAGE_REGISTRY</code> is passed or by setting
+the <a
+target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/variable/CMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY.html#variable:CMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY"><code>CMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY</code></a>
+variable to <code>FALSE</code> or the deprecated variable <a
+target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/variable/CMAKE_FIND_PACKAGE_NO_SYSTEM_PACKAGE_REGISTRY.html#variable:CMAKE_FIND_PACKAGE_NO_SYSTEM_PACKAGE_REGISTRY"><code>CMAKE_FIND_PACKAGE_NO_SYSTEM_PACKAGE_REGISTRY</code></a>
+to <code>TRUE</code>.</p>
+<p>See the <a
+target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/manual/cmake-packages.7.html#manual:cmake-packages(7)"><code>cmake-packages(7)</code></a>
+manual for details on the system package registry.</p></li>
+<li><p>Search paths specified by the <code>PATHS</code> option. These
+are typically hard-coded guesses.</p></li>
+</ol>
+</blockquote>
+<p>以上是<a
+target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/command/find_package.html">官方文档</a>中提供的搜索路径构成方式。可以注意一下第五条，<code>find_package</code>是会去搜索系统环境中所有的路径的。</p>
+<aside id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/50829542">cmake
+find_package路径详解 - 知乎 (zhihu.com)</a><a href="#fnref1"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</aside>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/programming/" rel="tag"># programming</a>
+              <a href="/tags/compile/" rel="tag"># compile</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/programming/compile/CMake-Introduction/" rel="prev" title="CMake介绍和简要说明">
+                  <i class="fa fa-chevron-left"></i> CMake介绍和简要说明
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/algo/fusion/framework/Review-of-Rule-Based-Traditional-Fusion-Framework/" rel="next" title="基于规则的传统融合框架综述">
+                  基于规则的传统融合框架综述 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yun MU</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">156k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">2:22</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="pdf" type="application/json">{"object_url":{"url":"https://cdnjs.cloudflare.com/ajax/libs/pdfobject/2.2.8/pdfobject.min.js","integrity":"sha256-tu9j5pBilBQrWSDePOOajCUdz6hWsid/lBNzK4KgEPM="},"url":"/lib/pdf/web/viewer.html"}</script>
+  <script src="/js/third-party/tags/pdf.js"></script>
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

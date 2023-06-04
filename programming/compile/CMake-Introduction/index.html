@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 6.3.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha256-AbA177XfpSnFEvgpYu1jMygiLabzPCJCRIBtR5jGc0k=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"starchrist.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.13.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="编译系统的对比和说明1  手写MakeFile: 适合于小型项目编译。当项目中模块众多并且之间依赖关系复杂时，维护Makefile非常困难。 Modern CMake: 开源社区非常流行的build system generator，通过执行CMakeLists生成makefile&#x2F;ninja等，构建C++项目。尤其是2013年以来Modern CMake的发展，理念是：一切皆为tar">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CMake介绍和简要说明">
+<meta property="og:url" content="https://starchrist.github.io/programming/compile/CMake-Introduction/index.html">
+<meta property="og:site_name" content="Yun&#39;s Tech Blog">
+<meta property="og:description" content="编译系统的对比和说明1  手写MakeFile: 适合于小型项目编译。当项目中模块众多并且之间依赖关系复杂时，维护Makefile非常困难。 Modern CMake: 开源社区非常流行的build system generator，通过执行CMakeLists生成makefile&#x2F;ninja等，构建C++项目。尤其是2013年以来Modern CMake的发展，理念是：一切皆为tar">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-10-16T03:31:10.000Z">
+<meta property="article:modified_time" content="2023-03-29T04:57:17.296Z">
+<meta property="article:author" content="Yun MU">
+<meta property="article:tag" content="programming">
+<meta property="article:tag" content="compile">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://starchrist.github.io/programming/compile/CMake-Introduction/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://starchrist.github.io/programming/compile/CMake-Introduction/","path":"programming/compile/CMake-Introduction/","title":"CMake介绍和简要说明"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>CMake介绍和简要说明 | Yun's Tech Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Yun's Tech Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%AF%B9%E6%AF%94%E5%92%8C%E8%AF%B4%E6%98%8E1"><span class="nav-number">1.</span> <span class="nav-text">编译系统的对比和说明1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cmake%E7%89%88%E6%9C%AC%E9%80%89%E6%8B%A93"><span class="nav-number">2.</span> <span class="nav-text">2022 CMake版本选择2</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#what-minimum-to-choose---os-support"><span class="nav-number">2.1.</span> <span class="nav-text">What minimum to choose - OS
+support:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#what-minimum-to-choose---features"><span class="nav-number">2.2.</span> <span class="nav-text">What minimum to choose -
+Features:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cmake%E6%96%87%E4%BB%B6%E7%BC%96%E5%86%99%E5%9F%BA%E7%A1%80"><span class="nav-number">3.</span> <span class="nav-text">CMake文件编写基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#minimum-version"><span class="nav-number">3.1.</span> <span class="nav-text">Minimum Version</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#setting-a-project"><span class="nav-number">3.2.</span> <span class="nav-text">Setting a Project</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#making-an-executable"><span class="nav-number">3.3.</span> <span class="nav-text">Making an executable</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#making-a-library"><span class="nav-number">3.4.</span> <span class="nav-text">Making a Library</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#definition-of-targets"><span class="nav-number">3.5.</span> <span class="nav-text">Definition of Targets</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%BC%E5%90%88%E7%A4%BA%E4%BE%8B"><span class="nav-number">3.6.</span> <span class="nav-text">综合示例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E8%B0%83%E8%AF%95cmakelists%E6%96%87%E4%BB%B6"><span class="nav-number">4.</span> <span class="nav-text">如何调试CMakeLists文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cmake%E5%AD%A6%E4%B9%A0%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">5.</span> <span class="nav-text">CMake学习参考资料</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E7%9A%84%E5%AD%A6%E4%B9%A0%E7%BD%91%E7%AB%99"><span class="nav-number">5.1.</span> <span class="nav-text">相关的学习网站</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E7%9A%84%E5%AD%A6%E4%B9%A0%E8%A7%86%E9%A2%91"><span class="nav-number">5.2.</span> <span class="nav-text">相关的学习视频</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Yun MU"
+      src="/images/avatar.jfif">
+  <p class="site-author-name" itemprop="name">Yun MU</p>
+  <div class="site-description" itemprop="description">Never Give Up!</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">33</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">24</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">33</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/starchrist" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;starchrist" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:starchrist7@gmail.com" title="E-Mail → mailto:starchrist7@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://starchrist.github.io/programming/compile/CMake-Introduction/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jfif">
+      <meta itemprop="name" content="Yun MU">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yun's Tech Blog">
+      <meta itemprop="description" content="Never Give Up!">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="CMake介绍和简要说明 | Yun's Tech Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          CMake介绍和简要说明
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-10-16 11:31:10" itemprop="dateCreated datePublished" datetime="2022-10-16T11:31:10+08:00">2022-10-16</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-03-29 12:57:17" itemprop="dateModified" datetime="2023-03-29T12:57:17+08:00">2023-03-29</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/programming/compile/" itemprop="url" rel="index"><span itemprop="name">compile</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>4.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h2 id="编译系统的对比和说明1">编译系统的对比和说明<a href="#fn1"
+class="footnote-ref" id="fnref1"
+role="doc-noteref"><sup>1</sup></a></h2>
+<ul>
+<li><p>手写MakeFile:
+适合于小型项目编译。当项目中模块众多并且之间依赖关系复杂时，维护Makefile非常困难。</p></li>
+<li><p>Modern CMake: 开源社区非常流行的build system
+generator，通过执行CMakeLists生成makefile/ninja等，构建C++项目。尤其是2013年以来Modern
+CMake的发展，理念是：一切皆为target or target property。Modern
+CMake通过target之间的依赖关系，实现target属性(头文件查找路径、编译选项、链接依赖)内部隐藏或者自动传递，可以非常方便地处理大型C++项目的复杂依赖关系。</p>
+<p>相比于makefile，Modern
+CMake大大解放了C/C++研发人员的生产力。</p></li>
+<li><p>Bazel (and Blade): Bazel是Google开源的编译构建工具，以Monolithic
+Repository为理念。与makefile &amp;
+CMake不同，Bazel另起炉灶，采用client/server运行模式，为云编译而生。Bazel工具将编译过程分三个阶段：Load
+Phase/Analysis Phase/Execution
+phase。研发人员实现workspace/build/.bzl三种文件，Bazel执行这些文件生成action
+graph，执行action来构建项目。</p></li>
+</ul>
+<span id="more"></span>
+<h2 id="cmake版本选择3">2022 CMake版本选择<a href="#fn2"
+class="footnote-ref" id="fnref2"
+role="doc-noteref"><sup>2</sup></a></h2>
+<h3 id="what-minimum-to-choose---os-support">What minimum to choose - OS
+support:</h3>
+<ul>
+<li><strong>3.4: The bare minimum. Never set less.</strong></li>
+<li>3.7: Debian old-stable.</li>
+<li><strong>3.10: Ubuntu 18.04.</strong></li>
+<li>3.11: CentOS 8 (use EPEL or AppSteams, though)</li>
+<li>3.13: Debian stable.</li>
+<li><strong>3.16: Ubuntu 20.04.</strong></li>
+<li>3.19: First to support Apple Silicon.</li>
+<li>latest: pip/conda-forge/homebew/chocolaty, etc.</li>
+</ul>
+<h3 id="what-minimum-to-choose---features">What minimum to choose -
+Features:</h3>
+<ul>
+<li>3.8: C++ meta features, CUDA, lots more</li>
+<li>3.11: <code>IMPORTED INTERFACE</code> setting, faster, FetchContent,
+<code>COMPILE_LANGUAGE</code> in IDEs</li>
+<li>3.12: C++20, <code>cmake --build build -j N</code>,
+<code>SHELL:</code>, FindPython</li>
+<li>3.14/3.15: CLI, FindPython updates</li>
+<li>3.16: Unity builds / precompiled headers, CUDA meta features</li>
+<li>3.17/3.18: Lots more CUDA, metaprogramming</li>
+</ul>
+<h2 id="cmake文件编写基础">CMake文件编写基础</h2>
+<h3 id="minimum-version">Minimum Version</h3>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cmake_minimum_required</span>(VERSION <span class="number">3.1</span>)</span><br></pre></td></tr></table></figure>
+<p>这条命令几乎是所有<code>CMakeLists.txt</code>的第一行命令，它设置项目需要的最小
+cmake 版本，因为较新的版本会有老版本没有的命令，如果 cmake
+版本号小于该命令指定的版本，cmake
+会报错。<u>另外在后面的视频里会提到版本 2.8.12 之后的 cmake 为
+<strong>modern cmake</strong></u>，更加注重 <strong>modular
+design</strong>，因此项目使用的版本不应低于 2.8.12。</p>
+<p>Tips: 在CMake
+3.12版本以后，这个命令支持<code>VERSION 3.1...3.15</code>这样的表达，相关细节内容可以参考<a
+href="#fn3" class="footnote-ref" id="fnref3"
+role="doc-noteref"><sup>3</sup></a>。</p>
+<h3 id="setting-a-project">Setting a Project</h3>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">project</span>(MyProject VERSION <span class="number">1.0</span></span><br><span class="line">                  DESCRIPTION <span class="string">&quot;Very nice project&quot;</span></span><br><span class="line">                  LANGUAGES CXX)</span><br></pre></td></tr></table></figure>
+<p>在这里<code>project</code>名称必须是第一个变量。后面的<code>VERSION</code>,
+<code>DESCRIPTION</code>, <code>LANGUAGES</code>等等属性都是可选的选项<a
+href="#fn4" class="footnote-ref" id="fnref4"
+role="doc-noteref"><sup>4</sup></a>。</p>
+<h3 id="making-an-executable">Making an executable</h3>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">add_executable</span>(one two.cpp three.h)</span><br></pre></td></tr></table></figure>
+<p><code>one</code> 既是生成的可执行文件的名称，也是创建的
+<code>CMake</code> 目标(target)的名称。</p>
+<p>紧接着的是源文件的列表，你想列多少个都可以。CMake 很聪明
+，它根据拓展名只编译源文件。在大多数情况下，头文件将会被忽略；列出他们的唯一原因是为了让他们在
+IDE 中被展示出来，目标文件在许多 IDE 中被显示为文件夹。</p>
+<h3 id="making-a-library">Making a Library</h3>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">add_library</span>(one STATIC two.cpp three.h)</span><br></pre></td></tr></table></figure>
+<p>通过<a
+target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/command/add_library.html"><code>add_library</code></a>
+命令你可以制作一个库，同时你可以选择库的类型，可以是
+<code>STATIC</code>,<code>SHARED</code>,
+或者<code>MODULE</code>.如果你不选择它，CMake 将会通过
+<code>BUILD_SHARED_LIBS</code> 的值来选择构建 STATIC 还是 SHARED
+类型的库。</p>
+<p>在下面的章节中你将会看到，你经常需要生成一个虚构的目标，也就是说，一个不需要编译的目标。例如，只有一个头文件的库。这被叫做
+<code>INTERFACE</code>
+库，这是另一种选择，和上面唯一的区别是后面不能有文件名。</p>
+<h3 id="definition-of-targets">Definition of Targets</h3>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">target_include_directories</span>(one PUBLIC <span class="keyword">include</span>)</span><br></pre></td></tr></table></figure>
+<p><a
+target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/command/target_include_directories.html"><code>target_include_directories</code></a>
+为目标添加了一个目录。 <code>PUBLIC</code>
+对于一个二进制目标没有什么含义；但对于库来说，它让 CMake
+知道，任何链接到这个目标的目标也必须包含这个目录。其他选项还有
+<code>PRIVATE</code>（只影响当前目标，不影响依赖），以及
+<code>INTERFACE</code>（只影响依赖）。</p>
+<p>我们可以使用下面的命令，将<code>another</code>库和上面的<code>one</code>库链接起来：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">add_library</span>(another STATIC another.cpp another.h)</span><br><span class="line"><span class="keyword">target_link_libraries</span>(another PUBLIC one)</span><br></pre></td></tr></table></figure>
+<p><a
+target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/command/target_link_libraries.html"><code>target_link_libraries</code></a>
+可能是 CMake 中最有用也最令人迷惑的命令。</p>
+<ul>
+<li>如果<code>one</code>已经被定义过，那么<code>target_link_libraries</code>这个命令将会把<code>one</code>的依赖添加到<code>another</code>上。</li>
+<li>如果<code>one</code>没有被定义过，那么<code>target_link_libraries</code>这个命令将会从你的<code>path</code>中找到<code>one</code>这个library。</li>
+<li>或者你可以在这里给定<code>one</code>的绝对路径。</li>
+</ul>
+<p>虽然经典的CMake允许缺省关键字<code>PUBLIC</code>,
+但是缺省与非缺省混用，CMake将会报错。所以推荐全局使用<code>targets</code>和关键字。</p>
+<h3 id="综合示例">综合示例</h3>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># cmake版本要求定义</span></span><br><span class="line"><span class="keyword">cmake_minimum_required</span>(VERSION <span class="number">3.8</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义项目为Calculator</span></span><br><span class="line"><span class="keyword">project</span>(Calculator LANGUAGES CXX)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 添加calclib库，这里编译为静态链接库</span></span><br><span class="line"><span class="keyword">add_library</span>(calclib STATIC src/calclib.cpp <span class="keyword">include</span>/calc/lib.hpp)</span><br><span class="line"><span class="keyword">target_include_directories</span>(calclib PUBLIC <span class="keyword">include</span>) <span class="comment"># 申明include文件夹为calclib库的PUBLIC目录</span></span><br><span class="line"><span class="keyword">target_compile_features</span>(calclib PUBLIC cxx_std_11) <span class="comment"># 申明calclib的编译标准为cxx11</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 添加可执行程序</span></span><br><span class="line"><span class="keyword">add_executable</span>(calc apps/calc.cpp)</span><br><span class="line"><span class="keyword">target_link_libraries</span>(calc PUBLIC calclib) <span class="comment"># 链接calc和calclib</span></span><br></pre></td></tr></table></figure>
+<h2 id="如何调试cmakelists文件">如何调试CMakeLists文件</h2>
+<p>如果只是需要打印单一的变量，那么可以参考如下两种方法</p>
+<ol type="1">
+<li><p>使用<a
+target="_blank" rel="noopener" href="https://cmake.org/cmake/help/v3.12/command/message.html?highlight=message">message</a>命令</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">message</span>(STATUS <span class="string">&quot;MY_VARIABLE=$&#123;MY_VARIABLE&#125;&quot;</span>)</span><br></pre></td></tr></table></figure></li>
+<li><p>使用CMake内置的模组<a
+target="_blank" rel="noopener" href="https://cmake.org/cmake/help/v3.12/module/CMakePrintHelpers.html?highlight=cmakeprinthelpers">CMakePrintHelpers</a></p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">include</span>(CMakePrintHelpers)</span><br><span class="line">cmake_print_variables(MY_VARIABLE)</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>如果需要打印某些目标的变量，那么使用<a
+target="_blank" rel="noopener" href="https://cmake.org/cmake/help/v3.12/module/CMakePrintHelpers.html?highlight=cmakeprinthelpers">CMakePrintHelpers</a>的方法就是比较方便的选择了</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cmake_print_properties(TARGETS foo bar PROPERTIES</span><br><span class="line">                       LOCATION INTERFACE_INCLUDE_DIRS)</span><br></pre></td></tr></table></figure>
+<p>上面的命令将会打印<code>foo</code>,
+<code>bar</code>的<code>LOCATION</code>和<code>INTERFACE_INCLUDE_DIRS</code>属性。</p>
+<h2 id="cmake学习参考资料">CMake学习参考资料</h2>
+<h3 id="相关的学习网站">相关的学习网站</h3>
+<ul>
+<li><p><a target="_blank" rel="noopener" href="https://cliutils.gitlab.io/modern-cmake/">An
+Introduction to Modern CMake · Modern
+CMake</a>：这是一份非常不错的CMake教程，很多基础的概念可以从这个说明里面建立起来。</p>
+<ul>
+<li><p><a target="_blank" rel="noopener" href="https://gitlab.com/CLIUtils/modern-cmake">CLIUtils /
+Modern CMake · GitLab</a>：上面网站的Gitlab维护工程.</p></li>
+<li><p><a
+target="_blank" rel="noopener" href="https://modern-cmake-cn.github.io/Modern-CMake-zh_CN/">Introduction
+· Modern CMake</a>: 上面网站的中文翻译版本</p></li>
+</ul></li>
+<li><p><a
+target="_blank" rel="noopener" href="https://hsf-training.github.io/hsf-training-cmake-webpage/01-intro/index.html">Introduction
+– More Modern
+CMake</a>：这也是非常不错的CMake教程，上面的教程有参考其中的内容。</p></li>
+<li><p><a
+target="_blank" rel="noopener" href="https://gist.github.com/mbinna/c61dbb39bca0e4fb7d1f73b0d66a4fd1">Effective
+Modern CMake</a>：倡议的CMake编写规范。</p></li>
+<li><p><a
+target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/guide/tutorial/index.html">CMake
+Tutorial — CMake 3.25.0-rc1 Documentation</a>: CMake官方教程和Demo程序<a
+href="#fn5" class="footnote-ref" id="fnref5"
+role="doc-noteref"><sup>5</sup></a></p></li>
+<li><p><a
+target="_blank" rel="noopener" href="https://github.com/Kitware/CMake/tree/master/Help/guide/tutorial">CMake/Help/guide/tutorial
+at master · Kitware/CMake (github.com)</a>：Demo程序源码</p></li>
+<li><p><a
+target="_blank" rel="noopener" href="https://github.com/SFUMECJF/cmake-examples-Chinese">cmake-examples-Chinese</a>:
+一个相当不错的CMake学习文档仓库，其源头<a
+target="_blank" rel="noopener" href="https://github.com/ttroy50/cmake-examples">cmake-examples</a></p></li>
+</ul>
+<h3 id="相关的学习视频">相关的学习视频</h3>
+<ul>
+<li><strong><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=bsXLMQ6WgIk">Daniel
+Pfeifer “Effective CMake”</a></strong></li>
+<li><strong><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=eC9-iRN2b04">Using
+Modern CMake Patterns to Enforce a Good Modular Design</a></strong></li>
+<li><strong><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=S4QSKLXdTtA">Git,
+CMake, Conan - How to ship and reuse our C++ projects</a></strong></li>
+</ul>
+<aside id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a
+target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/112712537">大型C++工程的构建技术：Modern
+CMake vs Bazel</a><a href="#fnref1" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p><a
+target="_blank" rel="noopener" href="https://cliutils.gitlab.io/modern-cmake/chapters/intro/dodonot.html">Do's
+and Don'ts · Modern CMake</a><a href="#fnref2" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p><a
+target="_blank" rel="noopener" href="https://cliutils.gitlab.io/modern-cmake/chapters/basics.html">Introduction
+to the Basics</a><a href="#fnref3" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p><a
+target="_blank" rel="noopener" href="https://cliutils.gitlab.io/modern-cmake/chapters/basics.html">Introduction
+to the Basics</a><a href="#fnref4" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p><a
+target="_blank" rel="noopener" href="https://zhjwpku.com/2019/11/15/cmake-basic-commands-intro.html#tutorials">CMake
+基本用法介绍</a><a href="#fnref5" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+</ol>
+</aside>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/programming/" rel="tag"># programming</a>
+              <a href="/tags/compile/" rel="tag"># compile</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/sensor/camera/review/Camera-Sensor-Technology-Review/" rel="prev" title="摄像头传感器硬件技术综述">
+                  <i class="fa fa-chevron-left"></i> 摄像头传感器硬件技术综述
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/programming/compile/CMake-Frequently-Used-Functions/" rel="next" title="CMake常用函数的说明">
+                  CMake常用函数的说明 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yun MU</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">156k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">2:22</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="pdf" type="application/json">{"object_url":{"url":"https://cdnjs.cloudflare.com/ajax/libs/pdfobject/2.2.8/pdfobject.min.js","integrity":"sha256-tu9j5pBilBQrWSDePOOajCUdz6hWsid/lBNzK4KgEPM="},"url":"/lib/pdf/web/viewer.html"}</script>
+  <script src="/js/third-party/tags/pdf.js"></script>
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>
