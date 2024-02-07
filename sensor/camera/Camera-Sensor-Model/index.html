@@ -22,27 +22,27 @@
 
     <meta name="description" content="这篇文章已经被加密，请输入密码后查看。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="奇异值分解的数学说明">
-<meta property="og:url" content="https://starchrist.github.io/math/linear-algebra/Singular-Value-Decomposition-Introduction/index.html">
+<meta property="og:title" content="相机模型核心数学公式">
+<meta property="og:url" content="https://starchrist.github.io/sensor/camera/Camera-Sensor-Model/index.html">
 <meta property="og:site_name" content="Yun&#39;s Tech Blog">
 <meta property="og:description" content="这篇文章已经被加密，请输入密码后查看。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-05-21T14:08:12.000Z">
-<meta property="article:modified_time" content="2023-03-29T04:57:18.000Z">
+<meta property="article:published_time" content="2024-02-07T02:04:05.000Z">
+<meta property="article:modified_time" content="2024-02-07T02:38:27.145Z">
 <meta property="article:author" content="Yun MU">
-<meta property="article:tag" content="math">
-<meta property="article:tag" content="linear algebra">
+<meta property="article:tag" content="sensor">
+<meta property="article:tag" content="camera">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://starchrist.github.io/math/linear-algebra/Singular-Value-Decomposition-Introduction/">
+<link rel="canonical" href="https://starchrist.github.io/sensor/camera/Camera-Sensor-Model/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://starchrist.github.io/math/linear-algebra/Singular-Value-Decomposition-Introduction/","path":"math/linear-algebra/Singular-Value-Decomposition-Introduction/","title":"奇异值分解的数学说明"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://starchrist.github.io/sensor/camera/Camera-Sensor-Model/","path":"sensor/camera/Camera-Sensor-Model/","title":"相机模型核心数学公式"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>奇异值分解的数学说明 | Yun's Tech Blog</title>
+<title>相机模型核心数学公式 | Yun's Tech Blog</title>
   
 
 
@@ -174,7 +174,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://starchrist.github.io/math/linear-algebra/Singular-Value-Decomposition-Introduction/">
+    <link itemprop="mainEntityOfPage" href="https://starchrist.github.io/sensor/camera/Camera-Sensor-Model/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jfif">
@@ -187,12 +187,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="奇异值分解的数学说明 | Yun's Tech Blog">
+      <meta itemprop="name" content="相机模型核心数学公式 | Yun's Tech Blog">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          奇异值分解的数学说明
+          相机模型核心数学公式
         </h1>
 
         <div class="post-meta-container">
@@ -202,15 +202,9 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
+      
 
-      <time title="创建时间：2022-05-21 22:08:12" itemprop="dateCreated datePublished" datetime="2022-05-21T22:08:12+08:00">2022-05-21</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-03-29 12:57:18" itemprop="dateModified" datetime="2023-03-29T12:57:18+08:00">2023-03-29</time>
+      <time title="创建时间：2024-02-07 10:04:05 / 修改时间：10:38:27" itemprop="dateCreated datePublished" datetime="2024-02-07T10:04:05+08:00">2024-02-07</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -218,11 +212,11 @@
       </span>
       <span class="post-meta-item-text">分类于</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/math/" itemprop="url" rel="index"><span itemprop="name">math</span></a>
+          <a href="/categories/sensor/" itemprop="url" rel="index"><span itemprop="name">sensor</span></a>
         </span>
           ，
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/math/linear-algebra/" itemprop="url" rel="index"><span itemprop="name">linear algebra</span></a>
+          <a href="/categories/sensor/camera/" itemprop="url" rel="index"><span itemprop="name">camera</span></a>
         </span>
     </span>
 
@@ -240,7 +234,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>120</span>
+      <span>1.2k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -258,7 +252,7 @@
     
     
     <div class="post-body" itemprop="articleBody"><div class="hbe hbe-container" id="hexo-blog-encrypt" data-wpm="抱歉, 这个密码看着不太对, 请再试试。" data-whm="抱歉, 这个文章不能被校验, 不过您还是能看看解密后的内容。">
-  <script id="hbeData" type="hbeData" data-hmacdigest="8653b2f2e03064e6de12d56543c323c0aee286ea8097a186d5f9c7066a6832bb">bce9cbc6dae64512b7c9955cbfce13c87410ded5af2f420306dda58d98c91046f12752081e0133305849b6da1f43b53b7bb8101dcb8b32ea7c060c953055eb517528fb53cda616f0cd66bbf2b2cd8c4e0a0d1ac7cb423b37536c74fa18dae2de4475e738668a4e1abadbff59b0951683de5cbe09a6b7b3ba9798cfea50d7b558ff2dde46c764de2fb9ffe8e718e150f1a65676ba46140a5aef1e7e9434992da45352ed9218e0bac7ccc9d7c8982afe4669a346195b33513548ed859f320746ae4be17da10da02e5683544ba40d934152928221b15ff615ac3aa92fdabb539326d737b6baa518f69eb705ccd7b038fbc404eb94371f3a17acfffd1d00267f6ab6dfe9b4b7b345f97b773e4cdb52aba558e8151ad6fb57ce0a5da9c638c94bda24b86c34cef2eb2aca95506ec981e2362486026bc91689a42ec0c0cd9d137c914eeb013b116e706ea01d3e94fe3509157745d5648dc8a331aaeb5db10a7931bfb34fdfcc8e0fd4cc892a9fee0f9da8dbd5c2c7266b0abea440f2ef4b5d7137822e5b33bd47dcd18718254c4889e2ff5bd9b0b532a9dfd62f41941d1c4c54f54618c9103beaf4b32d095a60fbd30d9ee427ec71e70c03df7c479c6873f0a7658c436305e563bad8a715d8ac7c88514a5e2b60abd5129c80425b6b89ca321c9576d31f02adaf45cb359b590bda07597d47ec</script>
+  <script id="hbeData" type="hbeData" data-hmacdigest="e135ebcf2e81541789319cc485da6486c5f4e1e30aab356fef8719e312859d5a">ab965b7da345458654206021f118f680f3e08ee5b17a6ac69884624a693b1bce3acee5e4d9896e6b425f1ca08a09479f6037f54a4d24700ababba163a35fc958c49134de56e99fa8b56804fd42f05d7a73a387fb23f764098aebd7f28c1700d2e6d18aa60de5aa3cc7506b0633f3d198d9f26eef9ab5b0c5adfa983ce332aa881cbbb1784d2fd93de163997765a59009b52c6f3d7cd8b7c8226c5f14e08e5d22c2b7faeb1d979d1a61e6d93394b88b83dbd5acbea792f3ad067e4134e1b10e329e7b3a683c1a40376d99a730cb562ca5e04731e4f056384b8245d88e95c681c613a947db5f4aa6dc4d062ff1eed9beebeea1bae8c39c4c83bebd1f4f90f106307791280369b7e2aa1e91712607e9cd2da60490367231a8958c2e9f0933caed605cb0474e985af334de0ce7d2c89a9e5085a04ecff21518cd5d13dd5c2d8542b4578d6f0211abf4153e0d386f3e9aef1952d6d45bee9e8d9c73d80b086cd159ec03ed2871e18399f593d90b38230c4262c5b6b78a417005b5c181ae45cfa5e8fc6ed11829aac497cd2b14d9a33825c4835a68a87f20f381187be3cab67625004beb0ef086439a3ede55e3c8d91a77875c2e2321691fbeb2b070dc6ce7d648d46e1c9029af9c3c33b73d914f56af038581f859e2ee3f51dcc9978d783df891cfa65538b77deb03cc89fa26cb2c7f2551dd7a7c93891910e2f5591fe8fcb280ece8e419424e806075e4448a3c82d79d310c1384f32bf4614e34db79e493486cfab037969ca01bb1985bc9519a5d6549422eb7548f694067803d5daab8996fcdae36ef0652e384b9752ed3adadf264adced230f033ab37af15a9a144d6b7e2ae6630508d088f735cd9754932b83059fd9e07c09d63c6b6d4034d577e1aee5a09087b7adeb166fc85b32f227f89688892e9638e57820c690f3e418138a611d2d823d3c61e4141ebfbbcb7bb5a5f00650508540f5685ad89b4dd9bc367dc2b8f81bfb590d281c9b479a6a5e73f97fd6982a1bd39343728e3e6c102dce94cc67d84c6703ebc60a4dbe6e001f145aaf0789da34d6b4f95a6748721dd088a5d43dde085d943758ccc5728e35203c7071edd5d081b5f23a714233e941e39ef410999dbedeeea462b60734a90c1403f607923bc48d1b76c26a5a134197c64626dc94f09fbf52c329c8855c3cad7877c35018acf91241dde55d4fdfd9da48826c390ee1e6588f1991c85fe7477ad4db018fd045c7d7537cdacb5525f8ffe48a2dbf78639dc4111a7f8532267774bcdbc315becc4c8a811bb440b218c90cca2d63300d80e1e9aecbdd8e980eeb301a40453610f448e22d7fb91de0f4bf36a716eb3c83f2f1c763082283304c78b6b14c4c41bf9c94c299eb850ab7f6a126b5c06138e300f4598b1510215ba83e6a0ad8edd0660c9030b0defe0cc105b24f0cb95ffc6275b5e804d6feb6dc97b4095f2e6c2abd898280d9741bc35f9c5de17c3121f3930b3e86ddafd3c431f92c58453cb5d062359bf52f695a24e80bf7650ec0acc80d02dcf270245bda5319569335891d3b9f1e07a8e00721a160563fe179f9543c8cf0b0b0fb1cba1a50b9d1c2fe62d2ed3bcb6126d0f7e6cf451d528e31adae7e3376df4e947584298e7622171844b5231319062da42c01ec0690f948b1659c57117750390addb93cf268067cbef409b143187eeacbe88c3f9b6e8371719c9dd4e5f8db9c02b8e5ddddf34c4ed4a2528a70c8f720e97bcd52dd3e87fa1f2940c8ce80e5442b0489829bff712b8a72baea18814177441d58cea6ded4d5ebb1ba513a1106273482c5791ed910c752229cb6683877604d6e3515a0b7ef21c19f54d7c9a81b8501aca5a56333bfb6f65f16170935fc0bd4c8a2cac6d758f440bc87da69c349a585b05afc6d58b33400e5c853a25b0d8664bc79d3f35671f6a7194428025f9776759edc0f46a2d6ff9688a337fb2d35ed55af18651940160366e297b735ce7ff10d4d02d9e9bf91e97acd2b2007de47ca2c5dd9cdfd4d3daf04d33c8da8392f9fd1001bf785630efdcb81df7f7c0d6764b0807387a9a77332382e4ea2a88b01e7e6ba68cb7633adbcc235efb5ba23afbe05fc0d91fb2e053a4ba1d6e54823a4d43f9343b780a0e5518609abe7d75d46b7aa493aa116585b93081d99893b8d09815ef6e0fa00f211876e3517a2c1dc3b0f1aac6858173510746335ab0cd5d8808106e28e70597db1c8a00ed7133061b7f284fb3008c7d9d34a2c543aa0b9f4e08db040157c32d25b9d1d6e523e127b6927b7258837d2fc946cbb838c53b96539d53112307b6e12afe8e388c6ca1c74ff4e050dd505da6c1cfd35d042cd0cb97baa0a5032906eb23283defbd9bdb07dec8eb99e21b202950dbdec4949712baeba9d38aa93c14044d4171b0c7262b7a71bc516ffe5c9cc1c0eed5632cf13017b10de7efdf423091b7d114e05b56ab33fb86c4df2feab6f7127692040c4dd4a970fa46f7c83c60b9ecd89fc48d960cf4666d05c6db594af514acc7305c00f9bae0db28c8edc6506fe38f75310ed4deb2c16198006babf31e92f2a975de1117da3b598f8e995c3c44e02f9d5ec080c901827a4a5221b319a8ffac60dcaf252fe61b1a83e83ecda99274bbb38193835acce506ee7d6112bd07482f4663797f8015e83b32843d9b611c0f40fc83c098dcfe3544e3c8fa9d2dfbee3c9d971997561415322817cc3111d1d06fd6bc8ce8c611804d6605d3d852cb19961a89579b681cc8d199c76e80c0c910b01c78c34253c5bcf4394a444ad9211946bfbc11863dc7df82af8d00e0ac55754ed7b8330e8a975bd0e888f86ab0094328d6becb08b862689a26b63d9e1d8127ac56c258ed7b6e9add708e1bcedb38a9c9084deac1f08800c420ff0b78414e41990ab87465405631a917fc07bbef9ae79747b28131c61de491e2e419622f8ae59b59507069c537561826973fc6549018d8631298c035a2b8a847e84710c250302e3c35aab46e9fb0b88e50662ff8ef0e3bdca28740048f94172553b4aba73eac55e898bc7f1f5b43c171127187ed529e7ac1da89699c3c759050a11beb7098f8baeb9f940dd456b11b825f3e1f09da4da27678d7b92651b18c31b18286240bfd8324b08bd4ecbd3f2cbab887783e45777d513e94eb6d847fc8975fb71ed4b8ebad41f2636ade16b5baa3495a2c85c793c2520313eaff1050008a38ae7efcc296f953b87603edc7fece531fbcc770e134936854b250c94f501300c7a19c3aacca98162cf013faf9c7a28806ff9c5415dd5b442462cc82d14356197d26d644171a43a12aea93200c891e56b8292481615dc8a9510f2c1361146d5f07bb9aa349a1e0707739f9c9c3d39f1237bb50859af97941eaff1860865e6ee4434bffffb2f45274fc0b1cce291d7ba1d71cd5145a66d213bb274cde0b37622ba411996f32a6d8a0175bcd215057cf75bf78e1e68105c4c1bfc421822b154f68b6cb00f3dcfb59e106fb599fb2fa3e53286353c9ef426bd9d1f7e6b73705842ca2981ed69d47f996d988b7711d879dcffbac9ca10e52c0816b7d586b075aeed0b2aecaaf7f96fd073db3577eeec3eed099c4264c330ff6b63355f3495ac416c42804fbc5a1bfb160f48dc7ee31061af4c21ac8726d9c96db2ef1028a2302d4fea6f53ef8dba7630bae0700f38127413440df2417508c53e25e6fed9265aa1d44226ef232048adb4303830683a548fc8bf85021421745696e49b5fb16b6d9d27097a2800dea54aa0d91199a224c5229bb05039c7540cbdbbc58d1c9c921baa41d5af4008fa62eba142d1614659aa550f53c078c7ce172f826ece41be3c830335af245037a3e37c1233f12d362cca8e35aadbe477306012c241963836c8200c4441b4b19a88c351c30ba75be97138fe00ff8ae2940ad65cf3a7b5f0d0b64d1b26a6162cd3ee541a6382aeee3bcd8864f58b5157e8da6b2a82fc8e1c0f2ddf1bf303c3a9efd59d20722c06c423dc84ae84d550e0d8a508bff4feb9c1df96a77199a0dba5a2595833865946e40c32df9766083f98bc1a6dd581c2979f45aed81473178ad08571c2b4ada90955b2864e1dfd85e1d14c8dd8606f1b2b2132e0730bf0d751bd0f38a6502053b56306b1bf1ce82454e094ed4293946fed784471629eea4aa534e7e6678e9e7624ce9d6f4126b9533b1058534c7b3d73de68bf19aa11ddc95b78aa44d46de596a1f472eb66007c029fb7128c3938be2c138b5317ae9aa3d10b867d0a633a0e757cdf293bd75a0225f36a58b3e6bfb3b22fc8042a044a0ecda1afc2ae7613be92e83d5935a88a67024b12a5a91766ed213e7a32b6e7e6471354056d15faee72909c1a37e95ce23b8ff55a71d541c1081fbf919f4cf3443f0342209f671f6fcbea5f4af8dbec80b7a99095f2fa4755871a8ca7e485fa56fffd4b23616cf990a60f31381901fe4e0f719cb195bdb5c1157f2fd631a1ed919a489b754d68e1e70fb23cdfeabbe0b168a4dda7935bdecc2a9dfcdb27f51d48b9724483afab651cbdf08c6f7f7cd48d1fdbf5f184d37c5c5fa71003f96526464514eecf4217c8e3274a44160991631d51db9ed156e74dcdc52e1fdeb8d4a94dd1886bd8db530697193134815c649d81e681ac28ca55eeff487bde9a6fafc87084dadbcc985466fcf576d60035df7a22c18c84d29784b6fc226c0b09890d71e520787b199ed040f2d4ab4fae9346508831ad8e391477f8907532d1a04431aab1791eccc152665539df47e6d9952ebfc55ac599be8f2322f231e36b2cc4577d591c63ee78f08f216df7427c1639445d337b32e235d2b21981ceedf1896d49126ba7fa0443e8ef42700d330bd1ee5817b9a2977b589d3ffa2a3382ca292536703f25cc00a611e6645eedff9da5f382debe13e4e9b7864910ae27682d6e69136335859bbfe5022503ccdb5f47e2d63fdde0f10f979c442d2a659b1c9fafd207fcec099d0eb1764108304e353a72ee2a108e598b7726fc34185e6d70515411960276a334d9712334353f1089026b0e6696c74d9ab01b7e89d511d8636e68d63e56521f3737158ba6481f2840899f5a028799d47f7d9243d67cf76c7a227155f37483f4e756ce2fff81a2eba1e12688fc37f0198bad325b3b1ab0d099e4d6c8636b8d6e969768ba09fd0e4334f848793e15cd7c09414e9be7db14ba80db60eda7c2106f0b12ffc614ec7ad1724131f05b1543d4ea3a71e2dd258a2b78a4604df741652cad1e0e7c01f46b0934a59812f94f87d0707799d09fcadbf9eaed2ab70ba0a167c59f2f348261a8ed58ace35fd24ecda591519364bf8c1963370c06a9dc8ff0575b053415ad2904dc59c352c8e8c7cbc53</script>
   <div class="hbe hbe-content">
     <div class="hbe hbe-input hbe-input-default">
       <input class="hbe hbe-input-field hbe-input-field-default" type="password" id="hbePass">
@@ -277,22 +271,19 @@
 
     <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/math/" rel="tag"># math</a>
-              <a href="/tags/linear-algebra/" rel="tag"># linear algebra</a>
+              <a href="/tags/sensor/" rel="tag"># sensor</a>
+              <a href="/tags/camera/" rel="tag"># camera</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/math/probability-theory/Probability-Bayes-Law/" rel="prev" title="贝叶斯定理推导">
-                  <i class="fa fa-chevron-left"></i> 贝叶斯定理推导
+                <a href="/algo/ML/CNN/Note-for-modern-CNN/" rel="prev" title="现代CNN网络模块笔记">
+                  <i class="fa fa-chevron-left"></i> 现代CNN网络模块笔记
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/math/linear-algebra/Matrix-Diagonalization-Introduction/" rel="next" title="矩阵对角化的数学说明">
-                  矩阵对角化的数学说明 <i class="fa fa-chevron-right"></i>
-                </a>
             </div>
           </div>
     </footer>
