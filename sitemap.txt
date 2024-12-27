@@ -1,3 +1,4 @@
+https://starchrist.github.io/sensor/camera/review/Camera-Sensor-Technology-Review/
 https://starchrist.github.io/algo/ML/Note-for-Attention-Mechanism/
 https://starchrist.github.io/sensor/camera/Camera-Sensor-Model/
 https://starchrist.github.io/algo/common/Unit-for-Computation-Power/
@@ -27,7 +28,6 @@ https://starchrist.github.io/math/linear-algebra/Matrix-Diagonalization-Introduc
 https://starchrist.github.io/math/linear-algebra/Singular-Value-Decomposition-Introduction/
 https://starchrist.github.io/math/probability-theory/Probability-Bayes-Law/
 https://starchrist.github.io/sensor/lidar/review/Lidar-Sensor-Technology-Review/
-https://starchrist.github.io/sensor/camera/review/Camera-Sensor-Technology-Review/
 https://starchrist.github.io/sensor/radar/review/Radar-Sensor-MIMO-Introduction/
 https://starchrist.github.io/sensor/radar/review/Radar-Sensor-RSP-Review/
 https://starchrist.github.io/sensor/radar/review/Radar-Sensor-Technology-Review/
